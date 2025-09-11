@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target } from 'lucide-react';
+import ProspectDetails from '@/components/ProspectDetails';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 const LeadDashboard = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProspect, setSelectedProspect] = useState<any>(null);
 
   const stats = [
     { title: 'Total Prospects', value: '2,847', change: '+12%', icon: Users, color: 'text-primary' },
@@ -190,7 +192,11 @@ const LeadDashboard = () => {
               </thead>
               <tbody>
                 {prospects.map((prospect) => (
-                  <tr key={prospect.id} className="border-b hover:bg-muted/30 transition-colors">
+                  <tr 
+                    key={prospect.id} 
+                    className="border-b hover:bg-muted/30 transition-colors cursor-pointer"
+                    onClick={() => setSelectedProspect(prospect)}
+                  >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
@@ -252,6 +258,14 @@ const LeadDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Prospect Details Modal */}
+      {selectedProspect && (
+        <ProspectDetails 
+          prospect={selectedProspect} 
+          onClose={() => setSelectedProspect(null)} 
+        />
+      )}
     </div>
   );
 };
