@@ -15,10 +15,15 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogin = (username: string, password: string) => {
+    console.log('handleLogin called with:', { username, password });
+    console.log('Checking credentials...');
+    
     if (username === 'admin' && password === 'admin') {
+      console.log('Credentials valid, setting authenticated to true');
       setIsAuthenticated(true);
     } else {
-      alert('Invalid credentials. Use admin/admin');
+      console.log('Invalid credentials');
+      alert('Неверные учетные данные. Используйте admin/admin');
     }
   };
 

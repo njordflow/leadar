@@ -17,11 +17,19 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with:', { username, password });
+    
+    if (!username || !password) {
+      alert('Пожалуйста, заполните все поля');
+      return;
+    }
+    
     setIsLoading(true);
     
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    console.log('Calling onLogin with:', username, password);
     onLogin(username, password);
     setIsLoading(false);
   };
