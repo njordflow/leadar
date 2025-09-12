@@ -106,27 +106,34 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={`${
-                      isActive(item.url)
-                        ? 'bg-primary/10 text-primary border-r-2 border-primary font-medium'
-                        : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
-                    } ${!item.active ? 'opacity-60 cursor-not-allowed' : ''} transition-all`}
-                    disabled={!item.active}
-                  >
-                    <NavLink to={item.active ? item.url : '#'} className="flex items-center gap-3">
+                  {item.active ? (
+                    <SidebarMenuButton
+                      asChild
+                      className={`${
+                        isActive(item.url)
+                          ? 'bg-primary/10 text-primary border-r-2 border-primary font-medium'
+                          : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
+                      } transition-all`}
+                    >
+                      <NavLink to={item.url} className="flex items-center gap-3">
+                        <item.icon className={`h-4 w-4 ${collapsed ? 'mx-auto' : ''}`} />
+                        {!collapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  ) : (
+                    <SidebarMenuButton
+                      className="opacity-60 cursor-not-allowed hover:bg-muted/50 text-muted-foreground transition-all"
+                      disabled
+                    >
                       <item.icon className={`h-4 w-4 ${collapsed ? 'mx-auto' : ''}`} />
                       {!collapsed && (
                         <div className="flex items-center justify-between w-full">
                           <span>{item.title}</span>
-                          {!item.active && (
-                            <span className="text-xs bg-muted px-1.5 py-0.5 rounded">Soon</span>
-                          )}
+                          <span className="text-xs bg-muted px-1.5 py-0.5 rounded">Soon</span>
                         </div>
                       )}
-                    </NavLink>
-                  </SidebarMenuButton>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
