@@ -7,8 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { X } from 'lucide-react';
+import { countries } from '@/lib/countries';
 
 interface NewProjectDialogProps {
   open: boolean;
@@ -31,6 +33,14 @@ const roles = [
   'Director', 'Manager', 'Senior', 'Entry', 'Intern'
 ];
 
+const jobRoles = [
+  'Software Engineer', 'Data Scientist', 'Product Manager', 'Designer',
+  'Sales Manager', 'Marketing Manager', 'HR Manager', 'Operations Manager',
+  'Business Analyst', 'Project Manager', 'Account Manager', 'Developer',
+  'DevOps Engineer', 'QA Engineer', 'Machine Learning Engineer',
+  'Digital Marketing Specialist', 'Content Manager', 'Customer Success Manager'
+];
+
 export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialogProps) {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -39,6 +49,8 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
     companySizeMin: 50,
     companySizeMax: 500,
     selectedRoles: [] as string[],
+    selectedCountries: [] as string[],
+    selectedJobRoles: [] as string[],
     excludeConsulting: false,
     excludeRecruitment: false,
   });
@@ -67,6 +79,24 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
       selectedRoles: prev.selectedRoles.includes(role)
         ? prev.selectedRoles.filter(r => r !== role)
         : [...prev.selectedRoles, role]
+    }));
+  };
+
+  const toggleCountry = (countryCode: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedCountries: prev.selectedCountries.includes(countryCode)
+        ? prev.selectedCountries.filter(c => c !== countryCode)
+        : [...prev.selectedCountries, countryCode]
+    }));
+  };
+
+  const toggleJobRole = (jobRole: string) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedJobRoles: prev.selectedJobRoles.includes(jobRole)
+        ? prev.selectedJobRoles.filter(jr => jr !== jobRole)
+        : [...prev.selectedJobRoles, jobRole]
     }));
   };
 
@@ -99,6 +129,8 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
       companySizeMin: 50,
       companySizeMax: 500,
       selectedRoles: [],
+      selectedCountries: [],
+      selectedJobRoles: [],
       excludeConsulting: false,
       excludeRecruitment: false,
     });
@@ -135,6 +167,63 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               className="min-h-[80px] resize-none"
               rows={3}
             />
+          </div>
+
+          <Separator />
+
+          {/* Target Countries */}
+          <div className="space-y-4">
+            <div>
+              <Label>Target Countries</Label>
+              <p className="text-sm text-muted-foreground mt-1">Select countries to target for lead generation</p>
+            </div>
+            
+            <div className="flex gap-2 flex-wrap max-h-32 overflow-y-auto">
+              {countries.slice(0, 20).map((country) => (
+                <Badge
+                  key={country.code}
+                  variant={formData.selectedCountries.includes(country.code) ? "default" : "outline"}
+                  className="cursor-pointer hover:bg-accent transition-colors px-3 py-1"
+                  onClick={() => toggleCountry(country.code)}
+                >
+                  {country.name}
+                  {formData.selectedCountries.includes(country.code) && (
+                    <X className="w-3 h-3 ml-1" />
+                  )}
+                </Badge>
+              ))}
+            </div>
+            {formData.selectedCountries.length > 0 && (
+              <div className="text-sm text-muted-foreground">
+                Selected: {formData.selectedCountries.map(code => countries.find(c => c.code === code)?.name).join(', ')}
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Job Roles Keywords */}
+          <div className="space-y-4">
+            <div>
+              <Label>Job Roles Keywords</Label>
+              <p className="text-sm text-muted-foreground mt-1">Select the types of roles companies are hiring for</p>
+            </div>
+            
+            <div className="flex gap-2 flex-wrap">
+              {jobRoles.map((jobRole) => (
+                <Badge
+                  key={jobRole}
+                  variant={formData.selectedJobRoles.includes(jobRole) ? "default" : "outline"}
+                  className="cursor-pointer hover:bg-accent transition-colors px-3 py-1"
+                  onClick={() => toggleJobRole(jobRole)}
+                >
+                  {jobRole}
+                  {formData.selectedJobRoles.includes(jobRole) && (
+                    <X className="w-3 h-3 ml-1" />
+                  )}
+                </Badge>
+              ))}
+            </div>
           </div>
 
           <Separator />

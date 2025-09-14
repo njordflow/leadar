@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, MoreHorizontal, Users, Settings, Copy, Trash2, Play, Pause } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Users, Settings, Copy, Trash2, Play, Pause, Download, Filter } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -118,29 +118,55 @@ const Projects = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
+          <h1 className="text-3xl font-bold gradient-text">Projects</h1>
           <p className="text-muted-foreground mt-1">Manage and configure your lead generation projects</p>
         </div>
-        <Button 
-          onClick={() => setIsNewProjectOpen(true)}
-          className="gap-2 shadow-sm"
-        >
-          <Plus className="h-4 w-4" />
-          New Project
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="gap-2">
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+          <Button 
+            onClick={() => setIsNewProjectOpen(true)}
+            className="gap-2 shadow-sm"
+          >
+            <Plus className="h-4 w-4" />
+            New Project
+          </Button>
+        </div>
       </div>
 
-      {/* Search */}
-      <Card className="border shadow-sm">
-        <CardContent className="p-4">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search projects..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-0 bg-muted/30 focus-visible:ring-1 h-9"
-            />
+      {/* Search and Filters */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="relative flex-1 min-w-[300px]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 border-input focus:border-input-focus"
+              />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {['all', 'active', 'paused', 'completed'].map((status) => (
+                <Button
+                  key={status}
+                  variant="outline"
+                  size="sm"
+                  className="capitalize"
+                >
+                  {status}
+                </Button>
+              ))}
+            </div>
+
+            <Button variant="outline" size="sm" className="gap-2">
+              <Filter className="h-4 w-4" />
+              More Filters
+            </Button>
           </div>
         </CardContent>
       </Card>
