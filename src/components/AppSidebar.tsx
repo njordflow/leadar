@@ -40,7 +40,16 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
       <SidebarHeader className="border-b border-border/50 p-4">
         <div className="flex items-center justify-between">
           {/* Logo and Title */}
-          <div className="flex items-center gap-2">
+          <div 
+            className={`flex items-center gap-2 cursor-pointer ${collapsed ? 'justify-center w-full' : ''}`}
+            onClick={() => {
+              if (collapsed) {
+                // Trigger sidebar expansion when clicked in collapsed state
+                const trigger = document.querySelector('[data-sidebar="trigger"]') as HTMLButtonElement;
+                trigger?.click();
+              }
+            }}
+          >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Zap className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -58,9 +67,9 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2">
+      <SidebarContent className={collapsed ? 'px-1' : 'px-2'}>
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? 'px-2' : ''}>
+          <SidebarGroupLabel className={collapsed ? 'px-2 text-center' : ''}>
             {!collapsed && 'Navigation'}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -71,14 +80,14 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     asChild
                     className={`${
                       isActive(item.url)
-                        ? 'bg-primary/10 text-primary border-r-2 border-primary font-medium'
-                        : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
-                    } transition-all`}
+                        ? 'bg-accent text-accent-foreground font-medium'
+                        : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
+                    } transition-all ${collapsed ? 'justify-center' : ''}`}
                   >
-                     <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
-                       <item.icon className="h-4 w-4" />
-                       {!collapsed && <span>{item.title}</span>}
-                     </NavLink>
+                    <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
+                      <item.icon className="h-4 w-4 flex-shrink-0" />
+                      {!collapsed && <span>{item.title}</span>}
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -88,7 +97,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border/50">
-        <div className="p-4">
+        <div className={collapsed ? 'p-2' : 'p-4'}>
           {!collapsed && (
             <div className="flex items-center gap-3 mb-4">
               <Avatar className="h-8 w-8">
@@ -104,27 +113,27 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
             </div>
           )}
           
-           <div className={`flex ${collapsed ? 'flex-col gap-2' : 'gap-2'}`}>
-             <Button
-               variant="ghost"
-               size={collapsed ? 'icon' : 'sm'}
-               className={`hover:bg-muted/50 transition-colors ${collapsed ? 'justify-center w-full' : ''}`}
-               disabled
-             >
-               <Settings className="h-4 w-4" />
-               {!collapsed && <span className="ml-2">Settings</span>}
-             </Button>
-             
-             <Button
-               variant="ghost"
-               size={collapsed ? 'icon' : 'sm'}
-               onClick={onLogout}
-               className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'justify-center w-full' : ''}`}
-             >
-               <LogOut className="h-4 w-4" />
-               {!collapsed && <span className="ml-2">Logout</span>}
-             </Button>
-           </div>
+          <div className={`flex ${collapsed ? 'flex-col gap-1' : 'gap-2'}`}>
+            <Button
+              variant="ghost"
+              size={collapsed ? 'icon' : 'sm'}
+              className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
+              disabled
+            >
+              <Settings className="h-4 w-4" />
+              {!collapsed && <span className="ml-2">Settings</span>}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size={collapsed ? 'icon' : 'sm'}
+              onClick={onLogout}
+              className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'w-full' : ''}`}
+            >
+              <LogOut className="h-4 w-4" />
+              {!collapsed && <span className="ml-2">Logout</span>}
+            </Button>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
