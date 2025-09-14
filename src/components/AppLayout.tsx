@@ -33,14 +33,9 @@ const AppLayout = ({ children, onLogout }: AppLayoutProps) => {
           {/* Header */}
           <header className="h-16 border-b border-border/50 bg-background/95 backdrop-blur-sm sticky top-0 z-40">
             <div className="flex items-center gap-4 h-full px-6">
-              {/* Logo */}
+              {/* Current Project */}
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
-                <h2 className="font-bold text-lg bg-gradient-primary bg-clip-text text-transparent">
-                  LeadFlow Pro
-                </h2>
+                <span className="text-sm text-muted-foreground font-medium">Current project:</span>
               </div>
 
               {/* Project Selector */}

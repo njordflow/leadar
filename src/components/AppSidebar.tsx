@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Database, Building2, Settings, LogOut, Menu } from 'lucide-react';
+import { Users, Database, Building2, Settings, LogOut, PanelLeftClose, Zap } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -38,11 +38,23 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
   return (
     <Sidebar className={collapsed ? 'w-14' : 'w-64'} collapsible="icon">
       <SidebarHeader className="border-b border-border/50 p-4">
-        {/* Sidebar Toggle */}
         <div className="flex items-center justify-between">
-          <SidebarTrigger className="hover:bg-muted/50">
-            <Menu className="h-4 w-4" />
-          </SidebarTrigger>
+          {/* Logo and Title */}
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <Zap className="h-4 w-4 text-primary-foreground" />
+            </div>
+            {!collapsed && (
+              <span className="text-lg font-semibold">LeadFlow</span>
+            )}
+          </div>
+          
+          {/* Collapse Button */}
+          {!collapsed && (
+            <SidebarTrigger className="h-8 w-8 hover:bg-muted/50 p-0">
+              <PanelLeftClose className="h-4 w-4" />
+            </SidebarTrigger>
+          )}
         </div>
       </SidebarHeader>
 
@@ -63,10 +75,10 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                         : 'hover:bg-muted/50 text-muted-foreground hover:text-foreground'
                     } transition-all`}
                   >
-                    <NavLink to={item.url} className="flex items-center gap-3">
-                      <item.icon className={`h-4 w-4 ${collapsed ? 'mx-auto' : ''}`} />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
+                     <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
+                       <item.icon className="h-4 w-4" />
+                       {!collapsed && <span>{item.title}</span>}
+                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -92,27 +104,27 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
             </div>
           )}
           
-          <div className={`flex ${collapsed ? 'flex-col gap-2' : 'gap-2'}`}>
-            <Button
-              variant="ghost"
-              size={collapsed ? 'icon' : 'sm'}
-              className="hover:bg-muted/50 transition-colors"
-              disabled
-            >
-              <Settings className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Settings</span>}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size={collapsed ? 'icon' : 'sm'}
-              onClick={onLogout}
-              className="hover:bg-destructive/10 hover:text-destructive transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Logout</span>}
-            </Button>
-          </div>
+           <div className={`flex ${collapsed ? 'flex-col gap-2' : 'gap-2'}`}>
+             <Button
+               variant="ghost"
+               size={collapsed ? 'icon' : 'sm'}
+               className={`hover:bg-muted/50 transition-colors ${collapsed ? 'justify-center w-full' : ''}`}
+               disabled
+             >
+               <Settings className="h-4 w-4" />
+               {!collapsed && <span className="ml-2">Settings</span>}
+             </Button>
+             
+             <Button
+               variant="ghost"
+               size={collapsed ? 'icon' : 'sm'}
+               onClick={onLogout}
+               className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'justify-center w-full' : ''}`}
+             >
+               <LogOut className="h-4 w-4" />
+               {!collapsed && <span className="ml-2">Logout</span>}
+             </Button>
+           </div>
         </div>
       </SidebarFooter>
     </Sidebar>
