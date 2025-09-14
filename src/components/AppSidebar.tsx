@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Database, Building2, Settings, LogOut, PanelLeftClose, Zap } from 'lucide-react';
+import { Users, Database, Building2, Settings, LogOut, PanelLeftClose, PanelRightClose, Zap } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const menuItems = [
   { title: 'Prospects', url: '/', icon: Users, active: true },
@@ -29,43 +30,58 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ onLogout }: AppSidebarProps) {
-  const { state } = useSidebar();
+  const { state, setOpen } = useSidebar();
   const location = useLocation();
   const collapsed = state === 'collapsed';
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <Sidebar className={collapsed ? 'w-14' : 'w-64'} collapsible="icon">
-      <SidebarHeader className="border-b border-border/50 p-4">
-        <div className="flex items-center justify-between">
-          {/* Logo and Title */}
-          <div 
-            className={`flex items-center gap-2 cursor-pointer ${collapsed ? 'justify-center w-full' : ''}`}
-            onClick={() => {
-              if (collapsed) {
-                // Trigger sidebar expansion when clicked in collapsed state
-                const trigger = document.querySelector('[data-sidebar="trigger"]') as HTMLButtonElement;
-                trigger?.click();
-              }
-            }}
-          >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Zap className="h-4 w-4 text-primary-foreground" />
-            </div>
-            {!collapsed && (
-              <span className="text-lg font-semibold">LeadFlow</span>
+    <TooltipProvider>
+      <Sidebar className={collapsed ? 'w-14' : 'w-64'} collapsible="icon">
+        <SidebarHeader className="border-b border-border/50 p-4">
+          <div className="flex items-center justify-between">
+            {/* Logo and Title */}
+            {collapsed ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div 
+                    className="flex items-center justify-center w-full cursor-pointer hover:bg-muted/50 rounded-md p-2 transition-colors"
+                    onClick={() => setOpen(true)}
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary flex-shrink-0">
+                      <Zap className="h-4 w-4 text-primary-foreground" />
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>Open sidebar</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary flex-shrink-0">
+                    <Zap className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <span className="text-lg font-semibold">LeadFlow</span>
+                </div>
+                
+                {/* Collapse Button */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarTrigger className="h-8 w-8 hover:bg-muted/50 p-0">
+                      <PanelLeftClose className="h-4 w-4" />
+                    </SidebarTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    <p>Close sidebar</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
             )}
           </div>
-          
-          {/* Collapse Button */}
-          {!collapsed && (
-            <SidebarTrigger className="h-8 w-8 hover:bg-muted/50 p-0">
-              <PanelLeftClose className="h-4 w-4" />
-            </SidebarTrigger>
-          )}
-        </div>
-      </SidebarHeader>
+        </SidebarHeader>
 
       <SidebarContent className={collapsed ? 'px-1' : 'px-2'}>
         <SidebarGroup>
@@ -137,5 +153,6 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
         </div>
       </SidebarFooter>
     </Sidebar>
+    </TooltipProvider>
   );
 }

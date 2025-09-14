@@ -132,14 +132,14 @@ const Projects = () => {
 
       {/* Search */}
       <Card className="border shadow-sm">
-        <CardContent className="p-6">
+        <CardContent className="p-4">
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-0 bg-muted/30 focus-visible:ring-1"
+              className="pl-10 border-0 bg-muted/30 focus-visible:ring-1 h-9"
             />
           </div>
         </CardContent>
