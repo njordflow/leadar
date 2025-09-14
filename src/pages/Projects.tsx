@@ -5,11 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Slider } from '@/components/ui/slider';
 
 const Projects = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSize, setSelectedSize] = useState([1, 10000]);
 
   const projects = [
     {
@@ -60,12 +58,6 @@ const Projects = () => {
   ];
 
   const companySizeLabels = ['1', '10', '50', '100', '500', '1k', '10k', '10k+'];
-  const companySizeValues = [1, 10, 50, 100, 500, 1000, 10000, 10000];
-
-  const getSizeLabel = (value: number) => {
-    const index = companySizeValues.indexOf(value);
-    return index !== -1 ? companySizeLabels[index] : value.toString();
-  };
 
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
@@ -101,31 +93,6 @@ const Projects = () => {
               <Filter className="h-4 w-4" />
               More Filters
             </Button>
-          </div>
-
-          {/* Company Size Filter */}
-          <div className="mt-6 space-y-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Company Size Filter</h3>
-            <div className="space-y-3">
-              <div className="px-3">
-                <Slider
-                  value={selectedSize}
-                  onValueChange={setSelectedSize}
-                  max={7}
-                  min={0}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-              <div className="flex justify-between text-xs text-muted-foreground px-3">
-                {companySizeLabels.map((label, index) => (
-                  <span key={index}>{label}</span>
-                ))}
-              </div>
-              <div className="text-sm text-center">
-                Selected range: {getSizeLabel(companySizeValues[selectedSize[0]])} - {getSizeLabel(companySizeValues[selectedSize[1]])} employees
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>
