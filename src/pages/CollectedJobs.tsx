@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target } from 'lucide-react';
-import ProspectDetails from '@/components/ProspectDetails';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, MoreHorizontal, Globe, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,95 +7,79 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-const LeadDashboard = () => {
+const CollectedJobs = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedProspect, setSelectedProspect] = useState<any>(null);
 
   const stats = [
-    { title: 'Total Prospects', value: '2,847', change: '+12%', icon: Users, color: 'text-primary' },
-    { title: 'Verified Leads', value: '1,243', change: '+8%', icon: Target, color: 'text-success' },
-    { title: 'Conversion Rate', value: '43.7%', change: '+2.1%', icon: TrendingUp, color: 'text-secondary' },
-    { title: 'New This Week', value: '156', change: '+24%', icon: Calendar, color: 'text-warning' },
+    { title: 'Total Jobs', value: '4,256', change: '+18%', icon: Briefcase, color: 'text-primary' },
+    { title: 'This Week', value: '284', change: '+35%', icon: Calendar, color: 'text-success' },
+    { title: 'Duplicates Found', value: '89', change: '-12%', icon: Copy, color: 'text-warning' },
+    { title: 'Active Companies', value: '1,847', change: '+8%', icon: Building, color: 'text-secondary' },
   ];
 
-  const prospects = [
+  const jobs = [
     {
       id: 1,
       company: 'Carbon Robotics',
       logo: 'CR',
-      status: 'new',
-      size: '51-200',
-      industry: 'Robotics',
-      jobs: 5,
-      firstJob: '06/15/25',
-      lastJob: '06/17/25',
-      people: 'Apollo',
-      notes: 'Open',
+      title: 'Senior Software Engineer',
+      location: 'Seattle, WA',
+      posted: '2 hours ago',
+      deadline: '30 days',
+      salary: '$120k - $160k',
+      type: 'Full-time',
+      remote: true,
       website: 'carbonrobotics.com',
-      linkedin: 'carbon-robotics'
     },
     {
       id: 2,
       company: 'St. Paul Group',
       logo: 'SP',
-      status: 'new',
-      size: '51-200',
-      industry: 'Consulting',
-      jobs: 1,
-      firstJob: '06/15/25',
-      lastJob: '06/15/25',
-      people: 'Apollo',
-      notes: 'Open',
+      title: 'Marketing Manager',
+      location: 'Amsterdam, NL',
+      posted: '4 hours ago',
+      deadline: '25 days',
+      salary: '€65k - €85k',
+      type: 'Full-time',
+      remote: false,
       website: 'stpaulgroup.com',
-      linkedin: 'st-paul-group'
     },
     {
       id: 3,
       company: 'Electronic Logistics BV',
       logo: 'EL',
-      status: 'new',
-      size: '51-200',
-      industry: 'Logistics',
-      jobs: 2,
-      firstJob: '06/15/25',
-      lastJob: '06/15/25',
-      people: 'Apollo',
-      notes: 'Open',
+      title: 'DevOps Engineer',
+      location: 'Rotterdam, NL',
+      posted: '6 hours ago',
+      deadline: '20 days',
+      salary: '€70k - €95k',
+      type: 'Full-time',
+      remote: true,
       website: 'electronic-logistics.nl',
-      linkedin: 'electronic-logistics-bv'
     },
     {
       id: 4,
       company: 'Schmidt Global Relocations',
       logo: 'SG',
-      status: 'verified',
-      size: '51-200',
-      industry: 'Relocation',
-      jobs: 2,
-      firstJob: '06/15/25',
-      lastJob: '06/17/25',
-      people: 'Apollo',
-      notes: 'Open',
+      title: 'Data Analyst',
+      location: 'Berlin, DE',
+      posted: '1 day ago',
+      deadline: '15 days',
+      salary: '€55k - €75k',
+      type: 'Full-time',
+      remote: false,
       website: 'schmidt-relocation.com',
-      linkedin: 'schmidt-global'
     }
   ];
-
-  const statusColors = {
-    new: 'status-new',
-    verified: 'status-verified',
-    excluded: 'status-excluded',
-    duplicate: 'status-duplicate'
-  };
 
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold gradient-text">Prospect Intelligence</h1>
-          <p className="text-muted-foreground">AI-powered lead generation from job postings</p>
+          <h1 className="text-3xl font-bold gradient-text">Collected Jobs</h1>
+          <p className="text-muted-foreground">Monitor and analyze job postings from target companies</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" className="gap-2">
@@ -133,7 +116,7 @@ const LeadDashboard = () => {
             <div className="relative flex-1 min-w-[300px]">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search companies, industries, or keywords..."
+                placeholder="Search jobs, companies, or locations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 border-input focus:border-input-focus"
@@ -141,7 +124,7 @@ const LeadDashboard = () => {
             </div>
             
             <div className="flex items-center gap-2">
-              {['all', 'new', 'verified', 'excluded', 'duplicate'].map((status) => (
+              {['all', 'today', 'this week', 'remote', 'on-site'].map((status) => (
                 <Button
                   key={status}
                   variant={selectedStatus === status ? "default" : "outline"}
@@ -162,13 +145,13 @@ const LeadDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Prospects Table */}
+      {/* Jobs Table */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>Prospects</span>
+            <span>Job Postings</span>
             <Badge variant="secondary" className="bg-primary-light text-primary">
-              {prospects.length} companies
+              {jobs.length} active jobs
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -177,59 +160,57 @@ const LeadDashboard = () => {
             <table className="w-full">
               <thead className="border-b bg-muted/50">
                 <tr>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Company</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Size</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Industry</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Jobs</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Date Range</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Company & Job</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Location</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Salary</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Posted</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Type</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {prospects.map((prospect) => (
+                {jobs.map((job) => (
                   <tr 
-                    key={prospect.id} 
-                    className="border-b hover:bg-muted/30 transition-colors cursor-pointer"
-                    onClick={() => setSelectedProspect(prospect)}
+                    key={job.id} 
+                    className="border-b hover:bg-muted/30 transition-colors"
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={`https://logo.clearbit.com/${prospect.website}`} />
+                          <AvatarImage src={`https://logo.clearbit.com/${job.website}`} />
                           <AvatarFallback className="bg-primary-light text-primary font-medium">
-                            {prospect.logo}
+                            {job.logo}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">{prospect.company}</p>
+                          <p className="font-medium">{job.title}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <Globe className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">{prospect.website}</span>
+                            <span className="text-sm text-muted-foreground">{job.company}</span>
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <Badge className={`${statusColors[prospect.status as keyof typeof statusColors]} border`}>
-                        {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
-                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm">{job.location}</span>
+                        {job.remote && (
+                          <Badge variant="outline" className="ml-2 text-xs bg-success-light text-success border-success/20">
+                            Remote
+                          </Badge>
+                        )}
+                      </div>
                     </td>
-                    <td className="p-4 text-muted-foreground">{prospect.size}</td>
-                    <td className="p-4 text-muted-foreground">{prospect.industry}</td>
+                    <td className="p-4 text-muted-foreground text-sm">{job.salary}</td>
+                    <td className="p-4 text-sm text-muted-foreground">{job.posted}</td>
                     <td className="p-4">
                       <Badge variant="outline" className="bg-secondary-light text-secondary border-secondary/20">
-                        {prospect.jobs} jobs
+                        {job.type}
                       </Badge>
-                    </td>
-                    <td className="p-4 text-sm text-muted-foreground">
-                      <div>{prospect.firstJob}</div>
-                      <div className="text-xs">to {prospect.lastJob}</div>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm" className="gap-1">
-                          <Linkedin className="h-3 w-3" />
+                          <Globe className="h-3 w-3" />
                           View
                         </Button>
                         <DropdownMenu>
@@ -240,9 +221,9 @@ const LeadDashboard = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Mark as Verified</DropdownMenuItem>
-                            <DropdownMenuItem>Add Note</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">Exclude</DropdownMenuItem>
+                            <DropdownMenuItem>Save Job</DropdownMenuItem>
+                            <DropdownMenuItem>Add to Prospects</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive">Mark as Duplicate</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -254,16 +235,8 @@ const LeadDashboard = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Prospect Details Modal */}
-      {selectedProspect && (
-        <ProspectDetails 
-          prospect={selectedProspect} 
-          onClose={() => setSelectedProspect(null)} 
-        />
-      )}
     </div>
   );
 };
 
-export default LeadDashboard;
+export default CollectedJobs;
