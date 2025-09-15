@@ -645,32 +645,16 @@ const LeadDashboard = () => {
             onClick={() => handleCardClick(stat)}
           >
             <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-muted-foreground mb-2">{stat.title}</p>
-                  
-                  {stat.value && (
-                    <div>
-                      <p className="text-2xl font-bold mb-1">{stat.value}</p>
-                      {stat.change && (
-                        <div className={`flex items-center gap-1 text-sm ${stat.changePositive ? 'text-success' : 'text-destructive'}`}>
-                          {stat.changePositive ? (
-                            <ArrowUp className="h-3 w-3" />
-                          ) : (
-                            <ArrowDown className="h-3 w-3" />
-                          )}
-                          {stat.change}
-                        </div>
-                      )}
-                    </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  {stat.change && (
+                    <p className={`text-sm ${stat.changePositive ? 'text-success' : 'text-destructive'}`}>{stat.change}</p>
                   )}
-                  
                 </div>
-                
-                <div className="flex flex-col items-end">
-                  <div className={`p-2 rounded-lg bg-primary-light ${stat.color}`}>
-                    <stat.icon className="h-5 w-5" />
-                  </div>
+                <div className={`p-2 rounded-lg bg-primary-light ${stat.color}`}>
+                  <stat.icon className="h-5 w-5" />
                 </div>
               </div>
             </CardContent>
