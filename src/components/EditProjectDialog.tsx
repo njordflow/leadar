@@ -163,9 +163,9 @@ export function EditProjectDialog({ open, onOpenChange, project, onSave }: EditP
       return;
     }
 
-    onSave({ ...formData, id: project?.id });
+    onSave({ ...formData, id: project?.id, status: 'pending' });
     toast({
-      title: "Project updated",
+      title: "Project updated. We'll review and launch it within 24 hours. Status: Pending.",
       description: `${formData.name} has been updated successfully.`,
     });
   };

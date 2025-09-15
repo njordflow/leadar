@@ -436,7 +436,7 @@ const LeadDashboard = () => {
       change: '+24% WoW', 
       changePositive: true,
       icon: Calendar, 
-      color: 'text-warning',
+      color: 'text-yellow-600',
       clickable: true,
       onClick: () => {
         setSelectedStatus('all');
@@ -453,7 +453,7 @@ const LeadDashboard = () => {
       change: '+7% WoW', 
       changePositive: true,
       icon: CheckCircle2, 
-      color: 'text-success',
+      color: 'text-green-600',
       clickable: true,
       onClick: () => {
         setSelectedStatus('verified');
@@ -466,7 +466,7 @@ const LeadDashboard = () => {
       change: '+156 this week', 
       changePositive: true,
       icon: CheckCircle2, 
-      color: 'text-success',
+      color: 'text-green-600',
       clickable: false
     },
   ];

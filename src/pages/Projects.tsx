@@ -122,10 +122,6 @@ const Projects = () => {
           <p className="text-muted-foreground mt-1">Manage and configure your lead generation projects</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
           <Button 
             onClick={() => setIsNewProjectOpen(true)}
             className="gap-2 shadow-sm"
@@ -151,7 +147,7 @@ const Projects = () => {
             </div>
             
             <div className="flex items-center gap-2">
-              {['all', 'active', 'paused', 'completed'].map((status) => (
+              {['all', 'active', 'paused', 'pending'].map((status) => (
                 <Button
                   key={status}
                   variant="outline"
@@ -162,11 +158,6 @@ const Projects = () => {
                 </Button>
               ))}
             </div>
-
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="h-4 w-4" />
-              More Filters
-            </Button>
           </div>
         </CardContent>
       </Card>

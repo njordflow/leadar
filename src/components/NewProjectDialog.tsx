@@ -145,9 +145,9 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
       return;
     }
 
-    onSave(formData);
+    onSave({ ...formData, status: 'pending' });
     toast({
-      title: "Project created",
+      title: "Project created. We'll review and launch it within 24 hours. Status: Pending.",
       description: `${formData.name} has been created successfully.`,
     });
     
