@@ -450,7 +450,8 @@ const LeadDashboard = () => {
     { 
       title: 'Verified Leads', 
       value: '1,243', 
-      change: 'Verification rate: 43.7%', 
+      change: '+7% WoW', 
+      changePositive: true,
       icon: CheckCircle2, 
       color: 'text-success',
       clickable: true,
@@ -461,12 +462,13 @@ const LeadDashboard = () => {
     },
     { 
       title: 'Data Hygiene', 
-      value: null, 
-      change: null, 
+      value: '10,823', 
+      change: '+156 this week', 
+      changePositive: true,
       icon: AlertTriangle, 
       color: 'text-destructive',
       clickable: false,
-      cleanedText: 'cleaned this week: 23',
+      cleanedText: 'jobs processed',
       pills: [
         { 
           label: 'Excluded', 

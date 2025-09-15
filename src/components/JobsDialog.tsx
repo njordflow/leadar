@@ -221,15 +221,13 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="flex items-center justify-between">
-            <span>Jobs at {companyName}</span>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={handleExportToExcel} className="gap-2">
-                <Download className="h-4 w-4" />
-                Export to Excel
-              </Button>
-            </div>
-          </DialogTitle>
+          <DialogTitle>Jobs at {companyName}</DialogTitle>
+          <div className="flex items-center justify-end">
+            <Button variant="outline" size="sm" onClick={handleExportToExcel} className="gap-2">
+              <Download className="h-4 w-4" />
+              Export to Excel
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
