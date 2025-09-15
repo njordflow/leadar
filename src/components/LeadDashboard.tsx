@@ -768,6 +768,7 @@ const LeadDashboard = () => {
                     <th className="text-left p-4 font-medium text-muted-foreground">Jobs</th>
                     <th className="text-left p-4 font-medium text-muted-foreground">Date Range</th>
                     <th className="text-left p-4 font-medium text-muted-foreground">Notes</th>
+                    <th className="text-left p-4 font-medium text-muted-foreground">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -862,39 +863,38 @@ const LeadDashboard = () => {
                        <div className="text-xs">to {prospect.lastJob}</div>
                      </td>
                      <td className="p-4">
-                       <div className="flex items-center gap-2">
-                         <Button
-                           variant="outline"
-                           size="sm"
-                           className="gap-1 text-primary border-primary/20 hover:bg-primary hover:text-primary-foreground"
-                           onClick={(e) => {
-                             e.stopPropagation();
-                             setSelectedProspect(prospect);
-                           }}
-                         >
-                           <Eye className="h-3 w-3" />
-                           Open
-                         </Button>
-                         
-                         <Button
-                           variant="ghost"
-                           size="sm"
-                           className={`gap-2 ${prospect.comments_count > 0 ? 'text-primary hover:text-primary-hover' : 'text-muted-foreground opacity-60'}`}
-                           onClick={(e) => {
-                             e.stopPropagation();
-                             setSelectedCompanyComments({
-                               ...prospect,
-                               comments: commentsData[prospect.id] || []
-                             });
-                             setIsCommentsDialogOpen(true);
-                           }}
-                         >
-                           <MessageSquare className="h-3 w-3" />
-                           {prospect.comments_count > 0 ? prospect.comments_count : ''}
-                         </Button>
-                       </div>
+                       <Button
+                         variant="ghost"
+                         size="sm"
+                         className={`gap-2 ${prospect.comments_count > 0 ? 'text-primary hover:text-primary-hover' : 'text-muted-foreground opacity-60'}`}
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setSelectedCompanyComments({
+                             ...prospect,
+                             comments: commentsData[prospect.id] || []
+                           });
+                           setIsCommentsDialogOpen(true);
+                         }}
+                       >
+                         <MessageSquare className="h-3 w-3" />
+                         {prospect.comments_count > 0 ? prospect.comments_count : ''}
+                       </Button>
                       </td>
-                  </tr>
+                      <td className="p-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1 text-primary border-primary/20 hover:bg-primary hover:text-primary-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProspect(prospect);
+                          }}
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Open
+                        </Button>
+                       </td>
+                   </tr>
                 ))}
                 </tbody>
               </table>
