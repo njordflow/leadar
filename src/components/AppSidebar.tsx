@@ -110,6 +110,32 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        {/* Spacer to push Feedback & Issues down */}
+        <div className="flex-1" />
+        
+        {/* Feedback & Issues section */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  className={`${
+                    isActive('/feedback')
+                      ? 'bg-accent text-accent-foreground font-medium'
+                      : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
+                  } transition-all ${collapsed ? 'justify-center' : ''}`}
+                >
+                  <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
+                    <MessageSquare className="h-4 w-4 flex-shrink-0" />
+                    {!collapsed && <span>Feedback & Issues</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border/50">
@@ -130,18 +156,6 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
           )}
           
           <div className={`flex ${collapsed ? 'flex-col gap-1' : 'gap-2'}`}>
-            <Button
-              variant="ghost"
-              size={collapsed ? 'icon' : 'sm'}
-              className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
-              asChild
-            >
-              <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
-                <MessageSquare className="h-4 w-4" />
-                {!collapsed && <span>Feedback & Issues</span>}
-              </NavLink>
-            </Button>
-            
             <Button
               variant="ghost"
               size={collapsed ? 'icon' : 'sm'}
