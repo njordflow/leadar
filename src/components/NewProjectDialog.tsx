@@ -7,9 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
-import { X } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import { countries } from '@/lib/countries';
 
 interface NewProjectDialogProps {
@@ -54,6 +55,10 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
     excludeConsulting: false,
     excludeRecruitment: false,
   });
+  
+  const [countryInput, setCountryInput] = useState('');
+  const [countryOpen, setCountryOpen] = useState(false);
+  const [jobRoleInput, setJobRoleInput] = useState('');
 
   const handleSizeChange = (type: 'min' | 'max', value: number) => {
     setFormData(prev => {
@@ -82,22 +87,46 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
     }));
   };
 
-  const toggleCountry = (countryCode: string) => {
+  const addCountry = (countryCode: string) => {
+    if (!formData.selectedCountries.includes(countryCode)) {
+      setFormData(prev => ({
+        ...prev,
+        selectedCountries: [...prev.selectedCountries, countryCode]
+      }));
+    }
+    setCountryInput('');
+    setCountryOpen(false);
+  };
+
+  const removeCountry = (countryCode: string) => {
     setFormData(prev => ({
       ...prev,
-      selectedCountries: prev.selectedCountries.includes(countryCode)
-        ? prev.selectedCountries.filter(c => c !== countryCode)
-        : [...prev.selectedCountries, countryCode]
+      selectedCountries: prev.selectedCountries.filter(c => c !== countryCode)
     }));
   };
 
-  const toggleJobRole = (jobRole: string) => {
+  const addJobRole = (jobRole: string) => {
+    if (jobRole.trim() && !formData.selectedJobRoles.includes(jobRole.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        selectedJobRoles: [...prev.selectedJobRoles, jobRole.trim()]
+      }));
+    }
+    setJobRoleInput('');
+  };
+
+  const removeJobRole = (jobRole: string) => {
     setFormData(prev => ({
       ...prev,
-      selectedJobRoles: prev.selectedJobRoles.includes(jobRole)
-        ? prev.selectedJobRoles.filter(jr => jr !== jobRole)
-        : [...prev.selectedJobRoles, jobRole]
+      selectedJobRoles: prev.selectedJobRoles.filter(jr => jr !== jobRole)
     }));
+  };
+
+  const handleJobRoleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addJobRole(jobRoleInput);
+    }
   };
 
   const formatSize = (value: number) => {
@@ -175,27 +204,71 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
           <div className="space-y-4">
             <div>
               <Label>Target Countries</Label>
-              <p className="text-sm text-muted-foreground mt-1">Select countries to target for lead generation</p>
+              <p className="text-sm text-muted-foreground mt-1">Type to search and select countries for lead generation</p>
             </div>
             
-            <div className="flex gap-2 flex-wrap max-h-32 overflow-y-auto">
-              {countries.slice(0, 20).map((country) => (
-                <Badge
-                  key={country.code}
-                  variant={formData.selectedCountries.includes(country.code) ? "default" : "outline"}
-                  className="cursor-pointer hover:bg-accent transition-colors px-3 py-1"
-                  onClick={() => toggleCountry(country.code)}
+            <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={countryOpen}
+                  className="w-full justify-between"
                 >
-                  {country.name}
-                  {formData.selectedCountries.includes(country.code) && (
-                    <X className="w-3 h-3 ml-1" />
-                  )}
-                </Badge>
-              ))}
-            </div>
+                  {countryInput || "Search countries..."}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Search countries..."
+                    value={countryInput}
+                    onValueChange={setCountryInput}
+                  />
+                  <CommandEmpty>No country found.</CommandEmpty>
+                  <CommandList>
+                    <CommandGroup>
+                      {countries
+                        .filter(country => 
+                          country.name.toLowerCase().includes(countryInput.toLowerCase()) &&
+                          !formData.selectedCountries.includes(country.code)
+                        )
+                        .slice(0, 10)
+                        .map((country) => (
+                          <CommandItem
+                            key={country.code}
+                            value={country.name}
+                            onSelect={() => addCountry(country.code)}
+                          >
+                            {country.name}
+                          </CommandItem>
+                        ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+
             {formData.selectedCountries.length > 0 && (
-              <div className="text-sm text-muted-foreground">
-                Selected: {formData.selectedCountries.map(code => countries.find(c => c.code === code)?.name).join(', ')}
+              <div className="flex gap-2 flex-wrap">
+                {formData.selectedCountries.map((countryCode) => {
+                  const country = countries.find(c => c.code === countryCode);
+                  return (
+                    <Badge
+                      key={countryCode}
+                      variant="default"
+                      className="px-3 py-1"
+                    >
+                      {country?.name}
+                      <button
+                        onClick={() => removeCountry(countryCode)}
+                        className="ml-2 hover:text-destructive"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -206,24 +279,46 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
           <div className="space-y-4">
             <div>
               <Label>Job Roles Keywords</Label>
-              <p className="text-sm text-muted-foreground mt-1">Select the types of roles companies are hiring for</p>
+              <p className="text-sm text-muted-foreground mt-1">Type job roles and press Enter to add them</p>
             </div>
             
-            <div className="flex gap-2 flex-wrap">
-              {jobRoles.map((jobRole) => (
-                <Badge
-                  key={jobRole}
-                  variant={formData.selectedJobRoles.includes(jobRole) ? "default" : "outline"}
-                  className="cursor-pointer hover:bg-accent transition-colors px-3 py-1"
-                  onClick={() => toggleJobRole(jobRole)}
-                >
-                  {jobRole}
-                  {formData.selectedJobRoles.includes(jobRole) && (
-                    <X className="w-3 h-3 ml-1" />
-                  )}
-                </Badge>
-              ))}
+            <div className="flex gap-2">
+              <Input
+                value={jobRoleInput}
+                onChange={(e) => setJobRoleInput(e.target.value)}
+                onKeyPress={handleJobRoleKeyPress}
+                placeholder="Type a job role and press Enter..."
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => addJobRole(jobRoleInput)}
+                disabled={!jobRoleInput.trim()}
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
+
+            {formData.selectedJobRoles.length > 0 && (
+              <div className="flex gap-2 flex-wrap">
+                {formData.selectedJobRoles.map((jobRole) => (
+                  <Badge
+                    key={jobRole}
+                    variant="default"
+                    className="px-3 py-1"
+                  >
+                    {jobRole}
+                    <button
+                      onClick={() => removeJobRole(jobRole)}
+                      className="ml-2 hover:text-destructive"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <Separator />
