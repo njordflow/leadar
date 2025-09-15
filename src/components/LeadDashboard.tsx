@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target, ExternalLink } from 'lucide-react';
 import ProspectDetails from '@/components/ProspectDetails';
+import FilterDialog from '@/components/FilterDialog';
+import ExportDialog from '@/components/ExportDialog';
+import Pagination from '@/components/Pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +15,11 @@ const LeadDashboard = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProspect, setSelectedProspect] = useState<any>(null);
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [filters, setFilters] = useState<any>({});
 
   const stats = [
     { title: 'Total Prospects', value: '2,847', change: '+12%', icon: Users, color: 'text-primary' },
@@ -20,7 +28,7 @@ const LeadDashboard = () => {
     { title: 'New This Week', value: '156', change: '+24%', icon: Calendar, color: 'text-warning' },
   ];
 
-  const prospects = [
+  const allProspects = [
     {
       id: 1,
       company: 'Carbon Robotics',
@@ -34,7 +42,8 @@ const LeadDashboard = () => {
       people: 'Apollo',
       notes: 'Open',
       website: 'carbonrobotics.com',
-      linkedin: 'carbon-robotics'
+      linkedin: 'carbon-robotics',
+      indeed: null
     },
     {
       id: 2,
@@ -49,7 +58,8 @@ const LeadDashboard = () => {
       people: 'Apollo',
       notes: 'Open',
       website: 'stpaulgroup.com',
-      linkedin: 'st-paul-group'
+      linkedin: 'st-paul-group',
+      indeed: 'st-paul-group-jobs'
     },
     {
       id: 3,
@@ -64,7 +74,8 @@ const LeadDashboard = () => {
       people: 'Apollo',
       notes: 'Open',
       website: 'electronic-logistics.nl',
-      linkedin: 'electronic-logistics-bv'
+      linkedin: 'electronic-logistics-bv',
+      indeed: null
     },
     {
       id: 4,
@@ -79,9 +90,306 @@ const LeadDashboard = () => {
       people: 'Apollo',
       notes: 'Open',
       website: 'schmidt-relocation.com',
-      linkedin: 'schmidt-global'
+      linkedin: 'schmidt-global',
+      indeed: 'schmidt-relocations'
+    },
+    {
+      id: 5,
+      company: 'TechFlow Solutions',
+      logo: 'TF',
+      status: 'verified',
+      size: '201-500',
+      industry: 'Technology',
+      jobs: 8,
+      firstJob: '06/14/25',
+      lastJob: '06/18/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'techflow.com',
+      linkedin: 'techflow-solutions',
+      indeed: 'techflow-careers'
+    },
+    {
+      id: 6,
+      company: 'HealthCare Plus',
+      logo: 'HC',
+      status: 'new',
+      size: '501-1000',
+      industry: 'Healthcare',
+      jobs: 12,
+      firstJob: '06/13/25',
+      lastJob: '06/19/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'healthcareplus.com',
+      linkedin: 'healthcare-plus',
+      indeed: null
+    },
+    {
+      id: 7,
+      company: 'FinanceGrow',
+      logo: 'FG',
+      status: 'excluded',
+      size: '11-50',
+      industry: 'Finance',
+      jobs: 3,
+      firstJob: '06/16/25',
+      lastJob: '06/16/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'financegrow.com',
+      linkedin: 'finance-grow',
+      indeed: 'financegrow-jobs'
+    },
+    {
+      id: 8,
+      company: 'ManufacturingCorp',
+      logo: 'MC',
+      status: 'new',
+      size: '1001-5000',
+      industry: 'Manufacturing',
+      jobs: 15,
+      firstJob: '06/12/25',
+      lastJob: '06/20/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'manufacturingcorp.com',
+      linkedin: 'manufacturing-corp',
+      indeed: 'manufacturing-corp-careers'
+    },
+    {
+      id: 9,
+      company: 'RetailMax',
+      logo: 'RM',
+      status: 'verified',
+      size: '5000+',
+      industry: 'Retail',
+      jobs: 25,
+      firstJob: '06/10/25',
+      lastJob: '06/22/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'retailmax.com',
+      linkedin: 'retail-max',
+      indeed: null
+    },
+    {
+      id: 10,
+      company: 'EduTech Innovations',
+      logo: 'ET',
+      status: 'new',
+      size: '51-200',
+      industry: 'Education',
+      jobs: 6,
+      firstJob: '06/17/25',
+      lastJob: '06/19/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'edutech.com',
+      linkedin: 'edutech-innovations',
+      indeed: 'edutech-jobs'
+    },
+    {
+      id: 11,
+      company: 'BuildRight Construction',
+      logo: 'BR',
+      status: 'new',
+      size: '201-500',
+      industry: 'Construction',
+      jobs: 18,
+      firstJob: '06/11/25',
+      lastJob: '06/21/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'buildright.com',
+      linkedin: 'buildright-construction',
+      indeed: 'buildright-careers'
+    },
+    {
+      id: 12,
+      company: 'TransportLogic',
+      logo: 'TL',
+      status: 'verified',
+      size: '501-1000',
+      industry: 'Transportation',
+      jobs: 9,
+      firstJob: '06/14/25',
+      lastJob: '06/18/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'transportlogic.com',
+      linkedin: 'transport-logic',
+      indeed: null
+    },
+    {
+      id: 13,
+      company: 'GreenEnergy Corp',
+      logo: 'GE',
+      status: 'new',
+      size: '1001-5000',
+      industry: 'Energy',
+      jobs: 14,
+      firstJob: '06/09/25',
+      lastJob: '06/23/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'greenenergy.com',
+      linkedin: 'green-energy-corp',
+      indeed: 'greenenergy-jobs'
+    },
+    {
+      id: 14,
+      company: 'PropertyPro Realty',
+      logo: 'PP',
+      status: 'excluded',
+      size: '51-200',
+      industry: 'Real Estate',
+      jobs: 4,
+      firstJob: '06/18/25',
+      lastJob: '06/19/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'propertypro.com',
+      linkedin: 'property-pro-realty',
+      indeed: null
+    },
+    {
+      id: 15,
+      company: 'MediaStream Studios',
+      logo: 'MS',
+      status: 'new',
+      size: '11-50',
+      industry: 'Media',
+      jobs: 7,
+      firstJob: '06/16/25',
+      lastJob: '06/20/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'mediastream.com',
+      linkedin: 'mediastream-studios',
+      indeed: 'mediastream-careers'
+    },
+    {
+      id: 16,
+      company: 'GovTech Solutions',
+      logo: 'GT',
+      status: 'verified',
+      size: '201-500',
+      industry: 'Government',
+      jobs: 11,
+      firstJob: '06/13/25',
+      lastJob: '06/17/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'govtech.com',
+      linkedin: 'govtech-solutions',
+      indeed: 'govtech-jobs'
+    },
+    {
+      id: 17,
+      company: 'HelpingHands Nonprofit',
+      logo: 'HH',
+      status: 'new',
+      size: '1-10',
+      industry: 'Non-profit',
+      jobs: 2,
+      firstJob: '06/19/25',
+      lastJob: '06/20/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'helpinghands.org',
+      linkedin: 'helping-hands-nonprofit',
+      indeed: null
+    },
+    {
+      id: 18,
+      company: 'ConsultPro Services',
+      logo: 'CP',
+      status: 'verified',
+      size: '51-200',
+      industry: 'Consulting',
+      jobs: 8,
+      firstJob: '06/15/25',
+      lastJob: '06/18/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'consultpro.com',
+      linkedin: 'consultpro-services',
+      indeed: 'consultpro-careers'
+    },
+    {
+      id: 19,
+      company: 'LogiMove Logistics',
+      logo: 'LM',
+      status: 'new',
+      size: '501-1000',
+      industry: 'Logistics',
+      jobs: 13,
+      firstJob: '06/12/25',
+      lastJob: '06/22/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'logimove.com',
+      linkedin: 'logimove-logistics',
+      indeed: 'logimove-jobs'
+    },
+    {
+      id: 20,
+      company: 'RoboFuture Technologies',
+      logo: 'RF',
+      status: 'duplicate',
+      size: '201-500',
+      industry: 'Robotics',
+      jobs: 10,
+      firstJob: '06/14/25',
+      lastJob: '06/19/25',
+      people: 'Apollo',
+      notes: 'Open',
+      website: 'robofuture.com',
+      linkedin: 'robofuture-tech',
+      indeed: 'robofuture-careers'
     }
   ];
+
+  const filteredProspects = useMemo(() => {
+    let filtered = allProspects;
+
+    // Filter by status
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter(prospect => prospect.status === selectedStatus);
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(prospect =>
+        prospect.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        prospect.industry.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply additional filters
+    if (filters.industries && filters.industries.length > 0) {
+      filtered = filtered.filter(prospect => filters.industries.includes(prospect.industry));
+    }
+
+    if (filters.companySizeMin || filters.companySizeMax) {
+      // Simple size filtering - in real app you'd convert size ranges to numbers
+      filtered = filtered.filter(prospect => {
+        if (filters.companySizeMin && prospect.size !== filters.companySizeMin) return false;
+        if (filters.companySizeMax && prospect.size !== filters.companySizeMax) return false;
+        return true;
+      });
+    }
+
+    return filtered;
+  }, [selectedStatus, searchQuery, filters]);
+
+  const paginatedProspects = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredProspects.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredProspects, currentPage, itemsPerPage]);
+
+  const totalPages = Math.ceil(filteredProspects.length / itemsPerPage);
 
   const statusColors = {
     new: 'status-new',
@@ -99,7 +407,7 @@ const LeadDashboard = () => {
           <p className="text-muted-foreground">AI-powered lead generation from job postings</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2" onClick={() => setIsExportDialogOpen(true)}>
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -154,7 +462,7 @@ const LeadDashboard = () => {
               ))}
             </div>
 
-            <Button variant="outline" size="sm" className="gap-2">
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsFilterDialogOpen(true)}>
               <Filter className="h-4 w-4" />
               More Filters
             </Button>
@@ -168,7 +476,7 @@ const LeadDashboard = () => {
           <CardTitle className="flex items-center justify-between">
             <span>Prospects</span>
             <Badge variant="secondary" className="bg-primary-light text-primary">
-              {prospects.length} companies
+              {filteredProspects.length} companies
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -187,7 +495,7 @@ const LeadDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {prospects.map((prospect) => (
+                {paginatedProspects.map((prospect) => (
                   <tr 
                     key={prospect.id} 
                     className="border-b hover:bg-muted/30 transition-colors cursor-pointer"
@@ -204,8 +512,42 @@ const LeadDashboard = () => {
                         <div>
                           <p className="font-medium">{prospect.company}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <Globe className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">{prospect.website}</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className={`h-5 w-5 p-0 ${prospect.website ? 'hover:bg-primary/10' : 'opacity-30 cursor-not-allowed'}`}
+                              disabled={!prospect.website}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (prospect.website) window.open(`https://${prospect.website}`, '_blank');
+                              }}
+                            >
+                              <Globe className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className={`h-5 w-5 p-0 ${prospect.linkedin ? 'hover:bg-blue-50' : 'opacity-30 cursor-not-allowed'}`}
+                              disabled={!prospect.linkedin}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (prospect.linkedin) window.open(`https://linkedin.com/company/${prospect.linkedin}`, '_blank');
+                              }}
+                            >
+                              <Linkedin className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-green-50' : 'opacity-30 cursor-not-allowed'}`}
+                              disabled={!prospect.indeed}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
+                              }}
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -253,7 +595,34 @@ const LeadDashboard = () => {
             </table>
           </div>
         </CardContent>
+        
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredProspects.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(items) => {
+            setItemsPerPage(items);
+            setCurrentPage(1);
+          }}
+        />
       </Card>
+
+      {/* Dialogs */}
+      <FilterDialog
+        open={isFilterDialogOpen}
+        onOpenChange={setIsFilterDialogOpen}
+        onApplyFilters={setFilters}
+      />
+
+      <ExportDialog
+        open={isExportDialogOpen}
+        onOpenChange={setIsExportDialogOpen}
+        totalCompanies={filteredProspects.length}
+        currentPageCompanies={paginatedProspects.length}
+      />
 
       {/* Prospect Details Modal */}
       {selectedProspect && (
