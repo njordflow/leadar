@@ -882,16 +882,18 @@ const LeadDashboard = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
-                      <StatusChangePopover
-                        currentStatus={prospect.status}
-                        onStatusChange={(status, reason) => handleStatusChange(prospect.id, status, reason)}
-                      >
-                        <Badge className={`${statusColors[prospect.status as keyof typeof statusColors]} border cursor-pointer hover:opacity-80 transition-opacity`}>
-                          {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
-                        </Badge>
-                      </StatusChangePopover>
-                    </td>
+                     <td className="p-4">
+                       <StatusChangePopover
+                         currentStatus={prospect.status}
+                         onStatusChange={(status, reason) => handleStatusChange(prospect.id, status, reason)}
+                       >
+                         <div onClick={(e) => e.stopPropagation()}>
+                           <Badge className={`${statusColors[prospect.status as keyof typeof statusColors]} border cursor-pointer hover:opacity-80 transition-opacity`}>
+                             {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
+                           </Badge>
+                         </div>
+                       </StatusChangePopover>
+                     </td>
                     <td className="p-4 text-muted-foreground">{prospect.size}</td>
                     <td className="p-4 text-muted-foreground">{prospect.industry}</td>
                      <td className="p-4">
