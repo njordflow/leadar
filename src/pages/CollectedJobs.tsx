@@ -6,10 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import ExportDialog from '@/components/ExportDialog';
+import { toast } from 'sonner';
 
 const CollectedJobs = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   const stats = [
     { title: 'Total Jobs', value: '4,256', change: '+18%', icon: Briefcase, color: 'text-primary' },
@@ -73,6 +76,18 @@ const CollectedJobs = () => {
     }
   ];
 
+  const filterCounts = {
+    all: 4256,
+    today: 142,
+    'last 3 days': 387,
+    'this week': 524
+  };
+
+  const handleExport = () => {
+    toast.success("Export completed successfully!");
+    setIsExportDialogOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       {/* Header */}
@@ -82,7 +97,7 @@ const CollectedJobs = () => {
           <p className="text-muted-foreground">Monitor and analyze job postings from target companies</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2" onClick={() => setIsExportDialogOpen(true)}>
             <Download className="h-4 w-4" />
             Export
           </Button>
@@ -124,7 +139,7 @@ const CollectedJobs = () => {
             </div>
             
             <div className="flex items-center gap-2">
-              {['all', 'today', 'this week', 'remote', 'on-site'].map((status) => (
+              {['all', 'today', 'last 3 days', 'this week'].map((status) => (
                 <Button
                   key={status}
                   variant={selectedStatus === status ? "default" : "outline"}
@@ -132,15 +147,10 @@ const CollectedJobs = () => {
                   onClick={() => setSelectedStatus(status)}
                   className={selectedStatus === status ? "bg-primary hover:bg-primary-hover" : ""}
                 >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                  {status.charAt(0).toUpperCase() + status.slice(1)} ({filterCounts[status as keyof typeof filterCounts]})
                 </Button>
               ))}
             </div>
-
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="h-4 w-4" />
-              More Filters
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -235,6 +245,13 @@ const CollectedJobs = () => {
           </div>
         </CardContent>
       </Card>
+
+      <ExportDialog
+        open={isExportDialogOpen}
+        onOpenChange={setIsExportDialogOpen}
+        totalCompanies={jobs.length}
+        currentPageCompanies={jobs.length}
+      />
     </div>
   );
 };

@@ -20,9 +20,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const menuItems = [
-  { title: 'Prospects', url: '/', icon: Users, active: true },
-  { title: 'Collected Jobs', url: '/jobs', icon: Database, active: true },
   { title: 'Projects', url: '/projects', icon: Building2, active: true },
+  { title: 'Collected Jobs', url: '/jobs', icon: Database, active: true },
+  { title: 'Prospects', url: '/', icon: Users, active: true },
 ];
 
 interface AppSidebarProps {
