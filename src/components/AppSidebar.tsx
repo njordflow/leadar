@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Database, Building2, Settings, LogOut, PanelLeftClose, PanelRightClose, Zap } from 'lucide-react';
+import { Users, Database, Building2, Settings, LogOut, PanelLeftClose, PanelRightClose, Zap, MessageSquare } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -130,6 +130,18 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
           )}
           
           <div className={`flex ${collapsed ? 'flex-col gap-1' : 'gap-2'}`}>
+            <Button
+              variant="ghost"
+              size={collapsed ? 'icon' : 'sm'}
+              className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
+              asChild
+            >
+              <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
+                <MessageSquare className="h-4 w-4" />
+                {!collapsed && <span>Feedback & Issues</span>}
+              </NavLink>
+            </Button>
+            
             <Button
               variant="ghost"
               size={collapsed ? 'icon' : 'sm'}
