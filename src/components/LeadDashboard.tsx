@@ -461,34 +461,13 @@ const LeadDashboard = () => {
       }
     },
     { 
-      title: 'Data Hygiene', 
+      title: 'Jobs Processed', 
       value: '10,823', 
       change: '+156 this week', 
       changePositive: true,
-      icon: AlertTriangle, 
-      color: 'text-destructive',
-      clickable: false,
-      cleanedText: 'jobs processed',
-      pills: [
-        { 
-          label: 'Excluded', 
-          value: excludedCount || 2, 
-          percentage: ((excludedCount || 2) / totalProspects * 100).toFixed(1),
-          onClick: () => {
-            setSelectedStatus('excluded');
-            updateURL({ status: 'excluded' });
-          }
-        },
-        { 
-          label: 'Duplicates', 
-          value: duplicatesCount || 1, 
-          percentage: ((duplicatesCount || 1) / totalProspects * 100).toFixed(1),
-          onClick: () => {
-            setSelectedStatus('duplicate');
-            updateURL({ status: 'duplicate' });
-          }
-        }
-      ]
+      icon: CheckCircle2, 
+      color: 'text-success',
+      clickable: false
     },
   ];
 
@@ -681,37 +660,6 @@ const LeadDashboard = () => {
                     </div>
                   )}
                   
-                  {stat.pills && (
-                    <div className="space-y-2">
-                      <div className="flex gap-2 flex-wrap">
-                        {stat.pills.map((pill: any, pillIndex: number) => (
-                          <Button
-                            key={pillIndex}
-                            variant="outline"
-                            size="sm"
-                            className={`text-xs h-6 px-2 cursor-pointer hover:shadow-sm transition-shadow ${
-                              parseFloat(pill.percentage) > 10 ? 'border-destructive text-destructive' :
-                              parseFloat(pill.percentage) > 5 ? 'border-warning text-warning' :
-                              'border-muted-foreground text-muted-foreground'
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              pill.onClick();
-                            }}
-                          >
-                            {pill.label} — {pill.value} ({pill.percentage}%)
-                          </Button>
-                        ))}
-                      </div>
-                      {stat.cleanedText && (
-                        <p className="text-xs text-muted-foreground">{stat.cleanedText}</p>
-                      )}
-                    </div>
-                  )}
-                  
-                  {!stat.pills && stat.change && !stat.changePositive && (
-                    <p className="text-sm text-muted-foreground mt-1">{stat.change}</p>
-                  )}
                 </div>
                 
                 <div className="flex flex-col items-end">
@@ -740,20 +688,31 @@ const LeadDashboard = () => {
             </div>
             
             <div className="flex items-center gap-2 flex-wrap">
-              {['all', 'new', 'verified', 'excluded', 'duplicate'].map((status) => (
-                <Button
-                  key={status}
-                  variant={selectedStatus === status ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => {
-                    setSelectedStatus(status);
-                    updateURL({ status: status === 'all' ? null : status });
-                  }}
-                  className={selectedStatus === status ? "bg-primary hover:bg-primary-hover" : ""}
-                >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </Button>
-              ))}
+              {['all', 'new', 'verified', 'excluded', 'duplicate'].map((status) => {
+                const getStatusCount = (status: string) => {
+                  if (status === 'all') return totalProspects;
+                  if (status === 'new') return allProspects.filter(p => p.status === 'new').length;
+                  if (status === 'verified') return allProspects.filter(p => p.status === 'verified').length;
+                  if (status === 'excluded') return excludedCount;
+                  if (status === 'duplicate') return duplicatesCount;
+                  return 0;
+                };
+                
+                return (
+                  <Button
+                    key={status}
+                    variant={selectedStatus === status ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      updateURL({ status: status === 'all' ? null : status });
+                    }}
+                    className={selectedStatus === status ? "bg-primary hover:bg-primary-hover" : ""}
+                  >
+                    {status.charAt(0).toUpperCase() + status.slice(1)} ({getStatusCount(status)})
+                  </Button>
+                );
+              })}
               
               <Button
                 variant={withComments ? "default" : "outline"}
