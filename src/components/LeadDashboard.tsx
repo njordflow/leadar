@@ -3,6 +3,7 @@ import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calend
 import ProspectDetails from '@/components/ProspectDetails';
 import FilterDialog from '@/components/FilterDialog';
 import ExportDialog from '@/components/ExportDialog';
+import JobsDialog from '@/components/JobsDialog';
 import Pagination from '@/components/Pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,8 +19,10 @@ const LeadDashboard = () => {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filters, setFilters] = useState<any>({});
+  const [selectedCompanyJobs, setSelectedCompanyJobs] = useState<any>(null);
+  const [isJobsDialogOpen, setIsJobsDialogOpen] = useState(false);
 
   const stats = [
     { title: 'Total Prospects', value: '2,847', change: '+12%', icon: Users, color: 'text-primary' },
@@ -511,44 +514,44 @@ const LeadDashboard = () => {
                         </Avatar>
                         <div>
                           <p className="font-medium">{prospect.company}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={`h-5 w-5 p-0 ${prospect.website ? 'hover:bg-primary/10' : 'opacity-30 cursor-not-allowed'}`}
-                              disabled={!prospect.website}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (prospect.website) window.open(`https://${prospect.website}`, '_blank');
-                              }}
-                            >
-                              <Globe className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={`h-5 w-5 p-0 ${prospect.linkedin ? 'hover:bg-blue-50' : 'opacity-30 cursor-not-allowed'}`}
-                              disabled={!prospect.linkedin}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (prospect.linkedin) window.open(`https://linkedin.com/company/${prospect.linkedin}`, '_blank');
-                              }}
-                            >
-                              <Linkedin className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-green-50' : 'opacity-30 cursor-not-allowed'}`}
-                              disabled={!prospect.indeed}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
-                              }}
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                            </Button>
-                          </div>
+                           <div className="flex items-center gap-2 mt-1">
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               className={`h-5 w-5 p-0 ${prospect.website ? 'hover:bg-primary/10' : 'opacity-30 cursor-not-allowed'}`}
+                               disabled={!prospect.website}
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 if (prospect.website) window.open(`https://${prospect.website}`, '_blank');
+                               }}
+                             >
+                               <Globe className="h-3 w-3" />
+                             </Button>
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               className={`h-5 w-5 p-0 ${prospect.linkedin ? 'hover:bg-blue-50' : 'opacity-30 cursor-not-allowed'}`}
+                               disabled={!prospect.linkedin}
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 if (prospect.linkedin) window.open(`https://linkedin.com/company/${prospect.linkedin}`, '_blank');
+                               }}
+                             >
+                               <Linkedin className="h-3 w-3" />
+                             </Button>
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-green-50' : 'opacity-30 cursor-not-allowed'}`}
+                               disabled={!prospect.indeed}
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
+                               }}
+                             >
+                               <ExternalLink className="h-3 w-3" />
+                             </Button>
+                           </div>
                         </div>
                       </div>
                     </td>
@@ -559,21 +562,31 @@ const LeadDashboard = () => {
                     </td>
                     <td className="p-4 text-muted-foreground">{prospect.size}</td>
                     <td className="p-4 text-muted-foreground">{prospect.industry}</td>
-                    <td className="p-4">
-                      <Badge variant="outline" className="bg-secondary-light text-secondary border-secondary/20">
-                        {prospect.jobs} jobs
-                      </Badge>
-                    </td>
+                     <td className="p-4">
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         className="gap-2 bg-secondary-light text-secondary border-secondary/20 hover:bg-secondary hover:text-secondary-foreground"
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setSelectedCompanyJobs(prospect);
+                           setIsJobsDialogOpen(true);
+                         }}
+                       >
+                         <Search className="h-3 w-3" />
+                         {prospect.jobs} jobs
+                       </Button>
+                     </td>
                     <td className="p-4 text-sm text-muted-foreground">
                       <div>{prospect.firstJob}</div>
                       <div className="text-xs">to {prospect.lastJob}</div>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-1">
-                          <Linkedin className="h-3 w-3" />
-                          View
-                        </Button>
+                       <div className="flex items-center gap-2">
+                         <Button variant="outline" size="sm" className="gap-1">
+                           Open
+                           <ExternalLink className="h-3 w-3" />
+                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="sm">
@@ -622,6 +635,14 @@ const LeadDashboard = () => {
         onOpenChange={setIsExportDialogOpen}
         totalCompanies={filteredProspects.length}
         currentPageCompanies={paginatedProspects.length}
+      />
+
+      {/* Jobs Dialog */}
+      <JobsDialog
+        open={isJobsDialogOpen}
+        onOpenChange={setIsJobsDialogOpen}
+        companyName={selectedCompanyJobs?.company || ''}
+        jobs={[]}
       />
 
       {/* Prospect Details Modal */}
