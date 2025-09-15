@@ -50,7 +50,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     onClick={() => setOpen(true)}
                   >
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary flex-shrink-0">
-                      <Zap className="h-4 w-4 text-primary-foreground" />
+                      <Zap className="h-5 w-5 text-primary-foreground" />
                     </div>
                   </div>
                 </TooltipTrigger>
@@ -62,16 +62,16 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               <>
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary flex-shrink-0">
-                    <Zap className="h-4 w-4 text-primary-foreground" />
+                    <Zap className="h-5 w-5 text-primary-foreground" />
                   </div>
-                  <span className="text-lg font-semibold">LeadFlow</span>
+                  <span className="text-xl font-semibold">LeadFlow</span>
                 </div>
                 
                 {/* Collapse Button */}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <SidebarTrigger className="h-8 w-8 hover:bg-muted/50 p-0">
-                      <PanelLeftClose className="h-4 w-4" />
+                      <PanelLeftClose className="h-5 w-5" />
                     </SidebarTrigger>
                   </TooltipTrigger>
                   <TooltipContent side="left">
@@ -101,8 +101,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     } transition-all ${collapsed ? 'justify-center' : ''}`}
                   >
                     <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
-                      <item.icon className="h-4 w-4 flex-shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
+                      <item.icon className="h-5 w-5 flex-shrink-0" />
+                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -128,8 +128,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                   } transition-all ${collapsed ? 'justify-center' : ''}`}
                 >
                   <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
-                    <MessageSquare className="h-4 w-4 flex-shrink-0" />
-                    {!collapsed && <span>Feedback & Issues</span>}
+                    <MessageSquare className="h-5 w-5 flex-shrink-0" />
+                    {!collapsed && <span className="text-sm font-medium">Feedback & Issues</span>}
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -163,8 +163,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               asChild
             >
               <NavLink to="/settings" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
-                <Settings className="h-4 w-4" />
-                {!collapsed && <span>Settings</span>}
+                <Settings className="h-5 w-5" />
+                {!collapsed && <span className="text-sm font-medium">Settings</span>}
               </NavLink>
             </Button>
             
@@ -174,8 +174,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               onClick={onLogout}
               className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'w-full' : ''}`}
             >
-              <LogOut className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Logout</span>}
+              <LogOut className="h-5 w-5" />
+              {!collapsed && <span className="ml-2 text-sm font-medium">Logout</span>}
             </Button>
           </div>
         </div>
