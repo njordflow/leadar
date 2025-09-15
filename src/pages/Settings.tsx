@@ -78,7 +78,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="p-6 space-y-6 h-full">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground mt-2">
@@ -88,129 +88,140 @@ const Settings = () => {
 
       <Separator />
 
-      {/* Organization Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Organization details</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Manage your account information.
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Two column layout for better space utilization */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 h-full">
+        {/* Organization Details */}
+        <Card className="h-fit">
+          <CardHeader className="pb-4">
+            <CardTitle>Organization details</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Manage your account information.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="firstName" className="text-sm">First Name</Label>
+                <Input
+                  id="firstName"
+                  value={organizationData.firstName}
+                  onChange={(e) => handleOrganizationChange('firstName', e.target.value)}
+                  placeholder="Enter your first name"
+                  className="h-9"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName" className="text-sm">Last Name</Label>
+                <Input
+                  id="lastName"
+                  value={organizationData.lastName}
+                  onChange={(e) => handleOrganizationChange('lastName', e.target.value)}
+                  placeholder="Enter your last name"
+                  className="h-9"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="email" className="text-sm">Email</Label>
               <Input
-                id="firstName"
-                value={organizationData.firstName}
-                onChange={(e) => handleOrganizationChange('firstName', e.target.value)}
-                placeholder="Enter your first name"
+                id="email"
+                type="email"
+                value={organizationData.email}
+                onChange={(e) => handleOrganizationChange('email', e.target.value)}
+                placeholder="Enter your email address"
+                className="h-9"
               />
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="companyName" className="text-sm">Company Name</Label>
               <Input
-                id="lastName"
-                value={organizationData.lastName}
-                onChange={(e) => handleOrganizationChange('lastName', e.target.value)}
-                placeholder="Enter your last name"
+                id="companyName"
+                value={organizationData.companyName}
+                onChange={(e) => handleOrganizationChange('companyName', e.target.value)}
+                placeholder="Enter your company name"
+                className="h-9"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={organizationData.email}
-              onChange={(e) => handleOrganizationChange('email', e.target.value)}
-              placeholder="Enter your email address"
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm">Phone</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={organizationData.phone}
+                onChange={(e) => handleOrganizationChange('phone', e.target.value)}
+                placeholder="Enter your phone number"
+                className="h-9"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input
-              id="companyName"
-              value={organizationData.companyName}
-              onChange={(e) => handleOrganizationChange('companyName', e.target.value)}
-              placeholder="Enter your company name"
-            />
-          </div>
+            <div className="flex justify-end pt-2">
+              <Button onClick={handleSaveOrganization} size="sm">
+                Save changes
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={organizationData.phone}
-              onChange={(e) => handleOrganizationChange('phone', e.target.value)}
-              placeholder="Enter your phone number"
-            />
-          </div>
+        {/* Password Section */}
+        <Card className="h-fit">
+          <CardHeader className="pb-4">
+            <CardTitle>Password</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Define a new password. If not filled, no password modification will be applied.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword" className="text-sm">Current password</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={passwordData.currentPassword}
+                onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
+                placeholder="Leave empty if you don't want to change it."
+                className="h-9"
+              />
+            </div>
 
-          <div className="flex justify-end">
-            <Button onClick={handleSaveOrganization} className="bg-primary hover:bg-primary-hover">
-              Save changes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword" className="text-sm">New password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={passwordData.newPassword}
+                onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
+                placeholder="Enter new password"
+                className="h-9"
+              />
+            </div>
 
-      {/* Password Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Password</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Define a new password. If not filled, no password modification will be applied.
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="currentPassword">Current password</Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              value={passwordData.currentPassword}
-              onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
-              placeholder="Leave empty if you don't want to change it."
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-sm">New password confirmation</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={passwordData.confirmPassword}
+                onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
+                placeholder="Confirm new password"
+                className="h-9"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">New password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={passwordData.newPassword}
-              onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
-              placeholder="Enter new password"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">New password confirmation</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={passwordData.confirmPassword}
-              onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
-              placeholder="Confirm new password"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <Button 
-              onClick={handleSavePassword}
-              className="bg-primary hover:bg-primary-hover"
-              disabled={!passwordData.newPassword || !passwordData.confirmPassword}
-            >
-              Save changes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="flex justify-end pt-2">
+              <Button 
+                onClick={handleSavePassword}
+                size="sm"
+                disabled={!passwordData.newPassword || !passwordData.confirmPassword}
+              >
+                Save changes
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
