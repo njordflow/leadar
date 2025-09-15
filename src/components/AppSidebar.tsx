@@ -134,10 +134,12 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               variant="ghost"
               size={collapsed ? 'icon' : 'sm'}
               className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
-              disabled
+              asChild
             >
-              <Settings className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Settings</span>}
+              <NavLink to="/settings" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
+                <Settings className="h-4 w-4" />
+                {!collapsed && <span>Settings</span>}
+              </NavLink>
             </Button>
             
             <Button
