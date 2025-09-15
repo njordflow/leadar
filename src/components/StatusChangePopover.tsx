@@ -38,6 +38,7 @@ const StatusChangePopover = ({ currentStatus, onStatusChange, children }: Status
   };
 
   const needsReason = selectedStatus === 'excluded' || selectedStatus === 'duplicate';
+  const showReason = needsReason;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,7 +60,7 @@ const StatusChangePopover = ({ currentStatus, onStatusChange, children }: Status
             ))}
           </RadioGroup>
 
-          {needsReason && (
+          {showReason && (
             <div className="space-y-2">
               <Label htmlFor="reason" className="text-sm text-muted-foreground">
                 Reason (optional)

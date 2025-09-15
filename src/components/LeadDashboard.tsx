@@ -864,18 +864,20 @@ const LeadDashboard = () => {
                              >
                                <Linkedin className="h-3 w-3" />
                              </Button>
-                             <Button
-                               variant="ghost"
-                               size="sm"
-                               className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-green-50' : 'opacity-30 cursor-not-allowed'}`}
-                               disabled={!prospect.indeed}
-                               onClick={(e) => {
-                                 e.stopPropagation();
-                                 if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
-                               }}
-                             >
-                               <ExternalLink className="h-3 w-3" />
-                             </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-blue-50 text-blue-600' : 'opacity-30 cursor-not-allowed'}`}
+                                disabled={!prospect.indeed}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
+                                }}
+                              >
+                                <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
+                                  <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.8 17.2h-3.4v-5.3c0-1.4-.5-2.4-1.8-2.4-1 0-1.5.7-1.8 1.3-.1.2-.1.5-.1.8v5.6H7.3s.1-9.1 0-10h3.4v1.4c.4-.7 1.2-1.7 3-1.7 2.2 0 3.8 1.4 3.8 4.5v5.8zM5.7 6.9c-1.2 0-1.9-.8-1.9-1.8s.8-1.8 1.9-1.8c1.2 0 1.9.8 1.9 1.8s-.7 1.8-1.9 1.8zM7.4 17.2H4V7.2h3.4v10z"/>
+                                </svg>
+                              </Button>
                            </div>
                         </div>
                       </div>
