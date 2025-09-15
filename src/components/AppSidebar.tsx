@@ -101,8 +101,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     } transition-all ${collapsed ? 'justify-center' : ''}`}
                   >
                     <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
-                      <item.icon className="h-5 w-5 flex-shrink-0" />
-                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
+                      <item.icon className="h-6 w-6 flex-shrink-0" />
+                      {!collapsed && <span className="text-base font-semibold">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -128,8 +128,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                   } transition-all ${collapsed ? 'justify-center' : ''}`}
                 >
                   <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
-                    <MessageSquare className="h-5 w-5 flex-shrink-0" />
-                    {!collapsed && <span className="text-sm font-medium">Feedback & Issues</span>}
+                    <MessageSquare className="h-6 w-6 flex-shrink-0" />
+                    {!collapsed && <span className="text-base font-semibold">Feedback & Issues</span>}
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -163,8 +163,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               asChild
             >
               <NavLink to="/settings" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
-                <Settings className="h-5 w-5" />
-                {!collapsed && <span className="text-sm font-medium">Settings</span>}
+                <Settings className="h-6 w-6" />
+                {!collapsed && <span className="text-base font-semibold">Settings</span>}
               </NavLink>
             </Button>
             
@@ -174,8 +174,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               onClick={onLogout}
               className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'w-full' : ''}`}
             >
-              <LogOut className="h-5 w-5" />
-              {!collapsed && <span className="ml-2 text-sm font-medium">Logout</span>}
+              <LogOut className="h-6 w-6" />
+              {!collapsed && <span className="ml-2 text-base font-semibold">Logout</span>}
             </Button>
           </div>
         </div>
