@@ -714,18 +714,6 @@ const LeadDashboard = () => {
                 );
               })}
               
-              <Button
-                variant={withComments ? "default" : "outline"}
-                size="sm"
-                onClick={() => {
-                  setWithComments(!withComments);
-                  updateURL({ with_comments: !withComments ? 'true' : null });
-                }}
-                className={`gap-2 ${withComments ? "bg-primary hover:bg-primary-hover" : ""}`}
-              >
-                <MessageSquare className="h-3 w-3" />
-                With comments
-              </Button>
             </div>
 
             <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsFilterDialogOpen(true)}>
@@ -780,7 +768,6 @@ const LeadDashboard = () => {
                     <th className="text-left p-4 font-medium text-muted-foreground">Jobs</th>
                     <th className="text-left p-4 font-medium text-muted-foreground">Date Range</th>
                     <th className="text-left p-4 font-medium text-muted-foreground">Notes</th>
-                    <th className="text-left p-4 font-medium text-muted-foreground">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -891,28 +878,7 @@ const LeadDashboard = () => {
                          <MessageSquare className="h-3 w-3" />
                          {prospect.comments_count > 0 ? prospect.comments_count : ''}
                        </Button>
-                     </td>
-                    <td className="p-4">
-                       <div className="flex items-center gap-2">
-                         <Button variant="outline" size="sm" className="gap-1">
-                           Open
-                           <ExternalLink className="h-3 w-3" />
-                         </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Mark as Verified</DropdownMenuItem>
-                            <DropdownMenuItem>Add Note</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">Exclude</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </td>
+                      </td>
                   </tr>
                 ))}
                 </tbody>

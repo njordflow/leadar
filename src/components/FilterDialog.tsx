@@ -135,6 +135,24 @@ const FilterDialog: React.FC<FilterDialogProps> = ({ open, onOpenChange, onApply
               ))}
             </div>
           </div>
+
+          {/* With Comments Filter */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">Comments</Label>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="withComments"
+                checked={false}
+                onCheckedChange={() => {}}
+              />
+              <Label
+                htmlFor="withComments"
+                className="text-sm font-normal cursor-pointer"
+              >
+                Show only companies with comments
+              </Label>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-between pt-4">
