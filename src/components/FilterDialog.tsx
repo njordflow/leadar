@@ -15,6 +15,7 @@ const FilterDialog: React.FC<FilterDialogProps> = ({ open, onOpenChange, onApply
   const [companySizeMin, setCompanySizeMin] = useState('');
   const [companySizeMax, setCompanySizeMax] = useState('');
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+  const [showWithComments, setShowWithComments] = useState(false);
 
   const companySizes = [
     { value: '1-10', label: '1-10 employees' },
@@ -58,7 +59,8 @@ const FilterDialog: React.FC<FilterDialogProps> = ({ open, onOpenChange, onApply
     onApplyFilters({
       companySizeMin,
       companySizeMax,
-      industries: selectedIndustries
+      industries: selectedIndustries,
+      withComments: showWithComments
     });
     onOpenChange(false);
   };
@@ -67,6 +69,7 @@ const FilterDialog: React.FC<FilterDialogProps> = ({ open, onOpenChange, onApply
     setCompanySizeMin('');
     setCompanySizeMax('');
     setSelectedIndustries([]);
+    setShowWithComments(false);
   };
 
   return (
@@ -142,8 +145,8 @@ const FilterDialog: React.FC<FilterDialogProps> = ({ open, onOpenChange, onApply
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="withComments"
-                checked={false}
-                onCheckedChange={() => {}}
+                checked={showWithComments}
+                onCheckedChange={(checked) => setShowWithComments(!!checked)}
               />
               <Label
                 htmlFor="withComments"

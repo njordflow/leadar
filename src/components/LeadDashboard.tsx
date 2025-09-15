@@ -506,6 +506,11 @@ const LeadDashboard = () => {
       });
     }
 
+    // Filter by comments from filters dialog
+    if (filters.withComments) {
+      filtered = filtered.filter(prospect => prospect.comments_count > 0);
+    }
+
     return filtered;
   }, [selectedStatus, searchQuery, filters, withComments]);
 
