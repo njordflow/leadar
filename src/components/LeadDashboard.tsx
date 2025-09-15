@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target, ExternalLink, MessageSquare, CheckCircle2, AlertTriangle, Copy, Eye } from 'lucide-react';
+import { Search, Filter, Download, Plus, MoreHorizontal, Globe, Linkedin, Calendar, Users, TrendingUp, Target, ExternalLink, MessageSquare, CheckCircle2, AlertTriangle, Copy, Eye, ArrowUp, ArrowDown } from 'lucide-react';
 import ProspectDetails from '@/components/ProspectDetails';
 import FilterDialog from '@/components/FilterDialog';
 import ExportDialog from '@/components/ExportDialog';
@@ -87,57 +87,6 @@ const LeadDashboard = () => {
     ]
   };
 
-  const stats = [
-    { 
-      title: 'Total Prospects', 
-      value: '2,847', 
-      change: '+12% WoW', 
-      icon: Users, 
-      color: 'text-primary',
-      clickable: false
-    },
-    { 
-      title: 'New This Week', 
-      value: '156', 
-      change: null, 
-      icon: Calendar, 
-      color: 'text-warning',
-      clickable: true,
-      hasButton: true,
-      onClick: () => {
-        setSelectedStatus('all');
-        updateURL({ created_at: 'last7d', status: null });
-        // Scroll to table
-        setTimeout(() => {
-          document.querySelector('[data-table]')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    },
-    { 
-      title: 'Verified Leads', 
-      value: '1,243', 
-      change: '43.7%', 
-      icon: CheckCircle2, 
-      color: 'text-success',
-      clickable: true,
-      onClick: () => {
-        setSelectedStatus('verified');
-        updateURL({ status: 'verified' });
-      }
-    },
-    { 
-      title: 'Data Hygiene', 
-      value: null, 
-      change: 'cleaned this week: 23', 
-      icon: AlertTriangle, 
-      color: 'text-destructive',
-      clickable: false,
-      badges: [
-        { label: 'Excluded', value: 2 },
-        { label: 'Duplicates', value: 1 }
-      ]
-    },
-  ];
 
   const allProspects = [
     {
@@ -467,6 +416,80 @@ const LeadDashboard = () => {
     }
   ];
 
+  const totalProspects = allProspects.length;
+  const excludedCount = allProspects.filter(p => p.status === 'excluded').length;
+  const duplicatesCount = allProspects.filter(p => p.status === 'duplicate').length;
+
+  const stats = [
+    { 
+      title: 'Total Prospects', 
+      value: '2,847', 
+      change: '+12% WoW', 
+      changePositive: true,
+      icon: Users, 
+      color: 'text-primary',
+      clickable: false
+    },
+    { 
+      title: 'New This Week', 
+      value: '156', 
+      change: '+24% WoW', 
+      changePositive: true,
+      icon: Calendar, 
+      color: 'text-warning',
+      clickable: true,
+      onClick: () => {
+        setSelectedStatus('all');
+        updateURL({ created_at: 'last7d', status: null });
+        // Scroll to table
+        setTimeout(() => {
+          document.querySelector('[data-table]')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    },
+    { 
+      title: 'Verified Leads', 
+      value: '1,243', 
+      change: 'Verification rate: 43.7%', 
+      icon: CheckCircle2, 
+      color: 'text-success',
+      clickable: true,
+      onClick: () => {
+        setSelectedStatus('verified');
+        updateURL({ status: 'verified' });
+      }
+    },
+    { 
+      title: 'Data Hygiene', 
+      value: null, 
+      change: null, 
+      icon: AlertTriangle, 
+      color: 'text-destructive',
+      clickable: false,
+      cleanedText: 'cleaned this week: 23',
+      pills: [
+        { 
+          label: 'Excluded', 
+          value: excludedCount || 2, 
+          percentage: ((excludedCount || 2) / totalProspects * 100).toFixed(1),
+          onClick: () => {
+            setSelectedStatus('excluded');
+            updateURL({ status: 'excluded' });
+          }
+        },
+        { 
+          label: 'Duplicates', 
+          value: duplicatesCount || 1, 
+          percentage: ((duplicatesCount || 1) / totalProspects * 100).toFixed(1),
+          onClick: () => {
+            setSelectedStatus('duplicate');
+            updateURL({ status: 'duplicate' });
+          }
+        }
+      ]
+    },
+  ];
+
   const filteredProspects = useMemo(() => {
     let filtered = allProspects;
 
@@ -636,42 +659,63 @@ const LeadDashboard = () => {
             onClick={() => handleCardClick(stat)}
           >
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-sm font-medium text-muted-foreground mb-2">{stat.title}</p>
                   
                   {stat.value && (
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                  )}
-                  
-                  {stat.badges && (
-                    <div className="flex gap-2 mt-2">
-                      {stat.badges.map((badge: any, badgeIndex: number) => (
-                        <Badge key={badgeIndex} variant="outline" className="text-xs">
-                          {badge.label}: {badge.value}
-                        </Badge>
-                      ))}
+                    <div>
+                      <p className="text-2xl font-bold mb-1">{stat.value}</p>
+                      {stat.change && (
+                        <div className={`flex items-center gap-1 text-sm ${stat.changePositive ? 'text-success' : 'text-destructive'}`}>
+                          {stat.changePositive ? (
+                            <ArrowUp className="h-3 w-3" />
+                          ) : (
+                            <ArrowDown className="h-3 w-3" />
+                          )}
+                          {stat.change}
+                        </div>
+                      )}
                     </div>
                   )}
                   
-                  {stat.change && (
-                    <p className={`text-sm ${stat.change.includes('%') ? 'text-success' : 'text-muted-foreground'}`}>
-                      {stat.change}
-                    </p>
+                  {stat.pills && (
+                    <div className="space-y-2">
+                      <div className="flex gap-2 flex-wrap">
+                        {stat.pills.map((pill: any, pillIndex: number) => (
+                          <Button
+                            key={pillIndex}
+                            variant="outline"
+                            size="sm"
+                            className={`text-xs h-6 px-2 cursor-pointer hover:shadow-sm transition-shadow ${
+                              parseFloat(pill.percentage) > 10 ? 'border-destructive text-destructive' :
+                              parseFloat(pill.percentage) > 5 ? 'border-warning text-warning' :
+                              'border-muted-foreground text-muted-foreground'
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              pill.onClick();
+                            }}
+                          >
+                            {pill.label} — {pill.value} ({pill.percentage}%)
+                          </Button>
+                        ))}
+                      </div>
+                      {stat.cleanedText && (
+                        <p className="text-xs text-muted-foreground">{stat.cleanedText}</p>
+                      )}
+                    </div>
+                  )}
+                  
+                  {!stat.pills && stat.change && !stat.changePositive && (
+                    <p className="text-sm text-muted-foreground mt-1">{stat.change}</p>
                   )}
                 </div>
                 
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-end">
                   <div className={`p-2 rounded-lg bg-primary-light ${stat.color}`}>
                     <stat.icon className="h-5 w-5" />
                   </div>
-                  
-                  {stat.hasButton && (
-                    <Button variant="outline" size="sm" className="text-xs">
-                      <Eye className="h-3 w-3 mr-1" />
-                      View
-                    </Button>
-                  )}
                 </div>
               </div>
             </CardContent>
