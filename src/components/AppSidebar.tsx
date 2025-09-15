@@ -38,7 +38,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
   return (
     <TooltipProvider>
-      <Sidebar className={collapsed ? 'w-14' : 'w-64'} collapsible="icon">
+      <Sidebar collapsible="icon">{/* Remove manual width classes - use built-in animations */}
         <SidebarHeader className="border-b border-border/50 p-4">
           <div className="flex items-center justify-between">
             {/* Logo and Title */}
