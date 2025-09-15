@@ -45,8 +45,8 @@ const StatusChangePopover = ({ currentStatus, onStatusChange, children }: Status
       <PopoverTrigger asChild>
         {children}
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
+      <PopoverContent className="w-80 p-4" align="start" onClick={(e) => e.stopPropagation()}>
+        <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
           <h4 className="font-medium text-sm">Change status</h4>
           
           <RadioGroup value={selectedStatus} onValueChange={setSelectedStatus}>

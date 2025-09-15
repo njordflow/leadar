@@ -864,34 +864,32 @@ const LeadDashboard = () => {
                              >
                                <Linkedin className="h-3 w-3" />
                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-blue-50 text-blue-600' : 'opacity-30 cursor-not-allowed'}`}
-                                disabled={!prospect.indeed}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
-                                }}
-                              >
-                                <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
-                                  <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.8 17.2h-3.4v-5.3c0-1.4-.5-2.4-1.8-2.4-1 0-1.5.7-1.8 1.3-.1.2-.1.5-.1.8v5.6H7.3s.1-9.1 0-10h3.4v1.4c.4-.7 1.2-1.7 3-1.7 2.2 0 3.8 1.4 3.8 4.5v5.8zM5.7 6.9c-1.2 0-1.9-.8-1.9-1.8s.8-1.8 1.9-1.8c1.2 0 1.9.8 1.9 1.8s-.7 1.8-1.9 1.8zM7.4 17.2H4V7.2h3.4v10z"/>
-                                </svg>
-                              </Button>
+                               <Button
+                                 variant="ghost"
+                                 size="sm"
+                                 className={`h-5 w-5 p-0 ${prospect.indeed ? 'hover:bg-blue-50 text-blue-600' : 'opacity-30 cursor-not-allowed'}`}
+                                 disabled={!prospect.indeed}
+                                 onClick={(e) => {
+                                   e.stopPropagation();
+                                   if (prospect.indeed) window.open(`https://indeed.com/cmp/${prospect.indeed}`, '_blank');
+                                 }}
+                               >
+                                 <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
+                                   <path d="M14.822 10.308a3.018 3.018 0 111.32-4.038 3.006 3.006 0 01-1.32 4.044zM11.6.572c2.47-.901 5.294-.852 7.408.982a3.587 3.587 0 011.023 1.37c.213.69-.749-.07-.88-.168a9.407 9.407 0 00-2.15-1.095C12.837.386 8.897 2.707 6.463 6.316a19.505 19.505 0 00-2.248 5.126 2.918 2.918 0 01-.213.642c-.107.204-.049-.547-.049-.572a15.821 15.821 0 01.43-2.239C5.511 5.34 8.01 2.065 11.6.565zm.037 20.993v-8.763c.249.025.486.037.736.037a6.167 6.167 0 003.219-.895v9.62c0 .822-.15 1.43-.52 1.826A1.874 1.874 0 0113.62 24a1.825 1.825 0 01-1.427-.609c-.368-.404-.56-1.013-.56-1.825z"/>
+                                 </svg>
+                               </Button>
                            </div>
                         </div>
                       </div>
                     </td>
-                     <td className="p-4">
+                     <td className="p-4" onClick={(e) => e.stopPropagation()}>
                        <StatusChangePopover
                          currentStatus={prospect.status}
                          onStatusChange={(status, reason) => handleStatusChange(prospect.id, status, reason)}
                        >
-                         <div onClick={(e) => e.stopPropagation()}>
-                           <Badge className={`${statusColors[prospect.status as keyof typeof statusColors]} border cursor-pointer hover:opacity-80 transition-opacity`}>
-                             {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
-                           </Badge>
-                         </div>
+                         <Badge className={`${statusColors[prospect.status as keyof typeof statusColors]} border cursor-pointer hover:opacity-80 transition-opacity`}>
+                           {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
+                         </Badge>
                        </StatusChangePopover>
                      </td>
                     <td className="p-4 text-muted-foreground">{prospect.size}</td>
