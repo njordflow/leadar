@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, MoreHorizontal, Globe, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,12 +7,15 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ExportDialog from '@/components/ExportDialog';
+import Pagination from '@/components/Pagination';
 import { toast } from 'sonner';
 
 const CollectedJobs = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const stats = [
     { title: 'Total Jobs', value: '4,256', change: '+18%', icon: Briefcase, color: 'text-primary' },
@@ -81,6 +84,31 @@ const CollectedJobs = () => {
     today: 142,
     'last 3 days': 387,
     'this week': 524
+  };
+
+  // Filter jobs based on search query
+  const filteredJobs = useMemo(() => {
+    return jobs.filter(job => 
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  // Calculate pagination
+  const totalItems = filteredJobs.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentJobs = filteredJobs.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items);
+    setCurrentPage(1); // Reset to first page when changing items per page
   };
 
   const handleExport = () => {
@@ -179,7 +207,7 @@ const CollectedJobs = () => {
                 </tr>
               </thead>
               <tbody>
-                {jobs.map((job) => (
+                {currentJobs.map((job) => (
                   <tr 
                     key={job.id} 
                     className="border-b hover:bg-muted/30 transition-colors"
@@ -243,14 +271,22 @@ const CollectedJobs = () => {
               </tbody>
             </table>
           </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+          />
         </CardContent>
       </Card>
 
       <ExportDialog
         open={isExportDialogOpen}
         onOpenChange={setIsExportDialogOpen}
-        totalCompanies={jobs.length}
-        currentPageCompanies={jobs.length}
+        totalCompanies={filteredJobs.length}
+        currentPageCompanies={currentJobs.length}
       />
     </div>
   );
