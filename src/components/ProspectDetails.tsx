@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Globe, Linkedin, ExternalLink, MapPin, Calendar, Users, Building, DollarSign, FileText, MessageCircle, Star, Copy, Phone, Mail } from 'lucide-react';
+import { X, Globe, Linkedin, ExternalLink, MapPin, Calendar, Users, Building, DollarSign, FileText, MessageCircle, Star, Copy, Phone, Mail, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProspectDetailsProps {
   prospect: any;
@@ -16,6 +18,9 @@ interface ProspectDetailsProps {
 const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) => {
   const [newComment, setNewComment] = useState('');
   const [commentType, setCommentType] = useState('comment');
+  const [actionDialog, setActionDialog] = useState<{ open: boolean; type: string; title: string } | null>(null);
+  const [actionComment, setActionComment] = useState('');
+  const { toast } = useToast();
 
   const jobs = [
     {
@@ -93,6 +98,18 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
     }
   };
 
+  const handleActionSubmit = () => {
+    if (actionDialog && actionComment.trim()) {
+      // Save the action comment
+      toast({
+        title: "Action completed",
+        description: `${actionDialog.type} action completed with comment.`,
+      });
+      setActionDialog(null);
+      setActionComment('');
+    }
+  };
+
   const getSourceIcon = (source: string) => {
     switch (source.toLowerCase()) {
       case 'linkedin':
@@ -125,11 +142,6 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                   <Badge className={`status-${prospect.status} border`}>
                     {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
                   </Badge>
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-warning text-warning" />
-                    <span className="text-sm font-medium">{companyInfo.rating}</span>
-                    <span className="text-xs text-muted-foreground">({companyInfo.reviews} reviews)</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -327,21 +339,37 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                     <Users className="h-4 w-4" />
                     Find people: Apollo.io
                   </Button>
-                  <Button variant="outline" className="w-full gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2"
+                    onClick={() => setActionDialog({ open: true, type: 'Mark as Verified', title: 'Mark as Verified' })}
+                  >
                     <Star className="h-4 w-4" />
                     Mark as Verified
                   </Button>
-                  <Button variant="outline" className="w-full gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2"
+                    onClick={() => setActionDialog({ open: true, type: 'Mark as Duplicate', title: 'Mark as Duplicate' })}
+                  >
                     <Copy className="h-4 w-4" />
                     Mark as Duplicate
                   </Button>
-                  <Button variant="outline" className="w-full gap-2 text-destructive">
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2 text-destructive hover:bg-destructive/10"
+                    onClick={() => setActionDialog({ open: true, type: 'Exclude Prospect', title: 'Exclude Prospect' })}
+                  >
                     <X className="h-4 w-4" />
                     Exclude Prospect
                   </Button>
                   <Separator />
-                  <Button variant="ghost" className="w-full gap-2 text-muted-foreground">
-                    <ExternalLink className="h-4 w-4" />
+                  <Button 
+                    variant="destructive" 
+                    className="w-full gap-2 bg-destructive hover:bg-destructive/90"
+                    onClick={() => setActionDialog({ open: true, type: 'Report an Issue', title: 'Report an Issue' })}
+                  >
+                    <AlertTriangle className="h-4 w-4" />
                     Report an Issue
                   </Button>
                 </CardContent>
@@ -406,6 +434,34 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
           </div>
         </div>
       </div>
+
+      {/* Action Dialog */}
+      <Dialog open={actionDialog?.open} onOpenChange={(open) => !open && setActionDialog(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{actionDialog?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Please provide additional information or reason for this action:
+            </p>
+            <Textarea
+              placeholder="Enter your comment or reason..."
+              value={actionComment}
+              onChange={(e) => setActionComment(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setActionDialog(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleActionSubmit} disabled={!actionComment.trim()}>
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
