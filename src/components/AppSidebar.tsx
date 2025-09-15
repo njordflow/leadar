@@ -100,7 +100,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                         : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
                     } transition-all ${collapsed ? 'justify-center' : ''}`}
                   >
-                    <NavLink to={item.url} className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
+                    <NavLink to={item.url} className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-3'}`}>
                       <item.icon className="h-6 w-6 flex-shrink-0" />
                       {!collapsed && <span className="text-base font-semibold">{item.title}</span>}
                     </NavLink>
@@ -127,7 +127,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                       : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
                   } transition-all ${collapsed ? 'justify-center' : ''}`}
                 >
-                  <NavLink to="/feedback" className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3'}`}>
+                  <NavLink to="/feedback" className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-3'}`}>
                     <MessageSquare className="h-6 w-6 flex-shrink-0" />
                     {!collapsed && <span className="text-base font-semibold">Feedback & Issues</span>}
                   </NavLink>
@@ -162,7 +162,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
               className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
               asChild
             >
-              <NavLink to="/settings" className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2'}`}>
+              <NavLink to="/settings" className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-2'}`}>
                 <Settings className="h-6 w-6" />
                 {!collapsed && <span className="text-base font-semibold">Settings</span>}
               </NavLink>
