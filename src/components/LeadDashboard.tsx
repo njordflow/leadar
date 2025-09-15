@@ -862,22 +862,37 @@ const LeadDashboard = () => {
                        <div className="text-xs">to {prospect.lastJob}</div>
                      </td>
                      <td className="p-4">
-                       <Button
-                         variant="ghost"
-                         size="sm"
-                         className={`gap-2 ${prospect.comments_count > 0 ? 'text-primary hover:text-primary-hover' : 'text-muted-foreground opacity-60'}`}
-                         onClick={(e) => {
-                           e.stopPropagation();
-                           setSelectedCompanyComments({
-                             ...prospect,
-                             comments: commentsData[prospect.id] || []
-                           });
-                           setIsCommentsDialogOpen(true);
-                         }}
-                       >
-                         <MessageSquare className="h-3 w-3" />
-                         {prospect.comments_count > 0 ? prospect.comments_count : ''}
-                       </Button>
+                       <div className="flex items-center gap-2">
+                         <Button
+                           variant="outline"
+                           size="sm"
+                           className="gap-1 text-primary border-primary/20 hover:bg-primary hover:text-primary-foreground"
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             setSelectedProspect(prospect);
+                           }}
+                         >
+                           <Eye className="h-3 w-3" />
+                           Open
+                         </Button>
+                         
+                         <Button
+                           variant="ghost"
+                           size="sm"
+                           className={`gap-2 ${prospect.comments_count > 0 ? 'text-primary hover:text-primary-hover' : 'text-muted-foreground opacity-60'}`}
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             setSelectedCompanyComments({
+                               ...prospect,
+                               comments: commentsData[prospect.id] || []
+                             });
+                             setIsCommentsDialogOpen(true);
+                           }}
+                         >
+                           <MessageSquare className="h-3 w-3" />
+                           {prospect.comments_count > 0 ? prospect.comments_count : ''}
+                         </Button>
+                       </div>
                       </td>
                   </tr>
                 ))}
