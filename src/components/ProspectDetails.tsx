@@ -142,6 +142,12 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                 <Linkedin className="h-4 w-4" />
                 LinkedIn
               </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M14.822 10.308a3.018 3.018 0 111.32-4.038 3.006 3.006 0 01-1.32 4.044zM11.6.572c2.47-.901 5.294-.852 7.408.982a3.587 3.587 0 011.023 1.37c.213.69-.749-.07-.88-.168a9.407 9.407 0 00-2.15-1.095C12.837.386 8.897 2.707 6.463 6.316a19.505 19.505 0 00-2.248 5.126 2.918 2.918 0 01-.213.642c-.107.204-.049-.547-.049-.572a15.821 15.821 0 01.43-2.239C5.511 5.34 8.01 2.065 11.6.565zm.037 20.993v-8.763c.249.025.486.037.736.037a6.167 6.167 0 003.219-.895v9.62c0 .822-.15 1.43-.52 1.826A1.874 1.874 0 0113.62 24a1.825 1.825 0 01-1.427-.609c-.368-.404-.56-1.013-.56-1.825z"/>
+                </svg>
+                Indeed
+              </Button>
               <Button variant="ghost" size="sm" onClick={onClose}>
                 <X className="h-5 w-5" />
               </Button>
@@ -309,8 +315,38 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
               </Card>
             </div>
 
-            {/* Right Column - Location & Quick Actions */}
+            {/* Right Column - Quick Actions & Location */}
             <div className="space-y-6">
+              {/* Quick Actions */}
+              <Card className="border-0 shadow-sm">
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button className="w-full gap-2 bg-gradient-primary hover:shadow-glow">
+                    <Users className="h-4 w-4" />
+                    Find people: Apollo.io
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2">
+                    <Star className="h-4 w-4" />
+                    Mark as Verified
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2">
+                    <Copy className="h-4 w-4" />
+                    Mark as Duplicate
+                  </Button>
+                  <Button variant="outline" className="w-full gap-2 text-destructive">
+                    <X className="h-4 w-4" />
+                    Exclude Prospect
+                  </Button>
+                  <Separator />
+                  <Button variant="ghost" className="w-full gap-2 text-muted-foreground">
+                    <ExternalLink className="h-4 w-4" />
+                    Report an Issue
+                  </Button>
+                </CardContent>
+              </Card>
+              
               {/* Location */}
               <Card className="border-0 shadow-sm">
                 <CardHeader>
@@ -336,36 +372,6 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                         Open in Google Maps
                       </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card className="border-0 shadow-sm">
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button className="w-full gap-2 bg-gradient-primary hover:shadow-glow">
-                    <Phone className="h-4 w-4" />
-                    Schedule Call
-                  </Button>
-                  <Button variant="outline" className="w-full gap-2">
-                    <Mail className="h-4 w-4" />
-                    Send Email
-                  </Button>
-                  <Button variant="outline" className="w-full gap-2">
-                    <Copy className="h-4 w-4" />
-                    Export Data
-                  </Button>
-                  <Separator />
-                  <div className="space-y-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Mark as Verified
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full text-destructive">
-                      Exclude Prospect
-                    </Button>
                   </div>
                 </CardContent>
               </Card>

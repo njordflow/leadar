@@ -228,9 +228,6 @@ const JobsDialog: React.FC<JobsDialogProps> = ({
                 <Download className="h-4 w-4" />
                 Export to Excel
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-                <X className="h-4 w-4" />
-              </Button>
             </div>
           </DialogTitle>
         </DialogHeader>
