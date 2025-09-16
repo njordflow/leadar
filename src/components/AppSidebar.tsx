@@ -141,7 +141,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border/50">
-        <div className={collapsed ? 'p-2' : 'p-4'}>
+        <div className={collapsed ? 'p-2' : 'p-2'}>
           {collapsed ? (
             <Tooltip>
               <TooltipTrigger asChild>
