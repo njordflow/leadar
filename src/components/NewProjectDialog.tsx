@@ -74,6 +74,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
   const [countryInput, setCountryInput] = useState('');
   const [countryOpen, setCountryOpen] = useState(false);
   const [jobRoleInput, setJobRoleInput] = useState('');
+  const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
 
   const handleSliderChange = (values: number[]) => {
     const [minIdx, maxIdx] = values;
@@ -86,6 +87,44 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
       companySizeMax: maxSize
     }));
   };
+
+  const handleIndicatorMouseDown = (type: 'min' | 'max', e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(type);
+  };
+
+  const handleIndicatorDrag = (e: React.MouseEvent, containerRef: React.RefObject<HTMLDivElement>) => {
+    if (!isDragging || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    const percentage = Math.max(0, Math.min(1, x / width));
+    const newIndex = Math.round(percentage * (sizeStops.length - 1));
+
+    if (isDragging === 'min') {
+      const maxIndex = sizeToSliderValue(formData.companySizeMax);
+      const validMinIndex = Math.min(newIndex, maxIndex);
+      const newMinSize = sliderValueToSize(validMinIndex);
+      setFormData(prev => ({ ...prev, companySizeMin: newMinSize }));
+    } else {
+      const minIndex = sizeToSliderValue(formData.companySizeMin);
+      const validMaxIndex = Math.max(newIndex, minIndex);
+      const newMaxSize = sliderValueToSize(validMaxIndex);
+      setFormData(prev => ({ ...prev, companySizeMax: newMaxSize }));
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(null);
+  };
+
+  React.useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => document.removeEventListener('mouseup', handleMouseUp);
+    }
+  }, [isDragging]);
 
   const toggleRole = (role: string) => {
     setFormData(prev => ({
@@ -343,45 +382,67 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Slider Container */}
               <div className="lg:col-span-2 relative px-3 py-4 bg-muted/30 rounded-lg border h-[120px] flex flex-col justify-center">
-                <Slider
-                  value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
-                  onValueChange={handleSliderChange}
-                  max={sizeStops.length - 1}
-                  min={0}
-                  step={1}
-                  className="w-full [&_[role=slider]]:h-5 [&_[role=slider]]:w-5 [&_[role=slider]]:border-3 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md"
-                />
-                
-                {/* Labels below slider */}
-                <div className="flex justify-between mt-4 px-1">
-                  {sizeStops.map((stop, index) => {
-                    const isMinSelected = index === sizeToSliderValue(formData.companySizeMin);
-                    const isMaxSelected = index === sizeToSliderValue(formData.companySizeMax);
-                    const isInRange = index >= sizeToSliderValue(formData.companySizeMin) && 
-                                     index <= sizeToSliderValue(formData.companySizeMax);
-                    
-                    return (
-                      <div key={stop.value} className="flex flex-col items-center relative">
-                        {/* Min/Max indicators */}
-                        {(isMinSelected || isMaxSelected) && (
-                          <div className="absolute -top-8 bg-primary text-primary-foreground text-xs px-2 py-1 rounded whitespace-nowrap">
-                            {isMinSelected && isMaxSelected ? 'Min/Max' : isMinSelected ? 'Min' : 'Max'}
-                          </div>
-                        )}
-                        
-                        <div 
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                            isInRange ? 'bg-primary scale-110' : 'bg-muted-foreground/40'
-                          }`}
-                        />
-                        <span className={`text-xs mt-1.5 font-medium transition-colors ${
-                          isInRange ? 'text-primary' : 'text-muted-foreground'
-                        }`}>
-                          {stop.label}
-                        </span>
-                      </div>
-                    );
-                  })}
+                <div 
+                  ref={(ref) => {
+                    const containerRef = React.useRef(ref);
+                    React.useEffect(() => {
+                      const handleMouseMove = (e: MouseEvent) => {
+                        if (isDragging && containerRef.current) {
+                          handleIndicatorDrag(e as any, containerRef);
+                        }
+                      };
+                      
+                      if (isDragging) {
+                        document.addEventListener('mousemove', handleMouseMove);
+                        return () => document.removeEventListener('mousemove', handleMouseMove);
+                      }
+                    }, [isDragging]);
+                  }}
+                  className="relative"
+                >
+                  <Slider
+                    value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
+                    onValueChange={handleSliderChange}
+                    max={sizeStops.length - 1}
+                    min={0}
+                    step={1}
+                    className="w-full [&_[role=slider]]:h-5 [&_[role=slider]]:w-5 [&_[role=slider]]:border-3 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-md"
+                  />
+                  
+                  {/* Labels below slider */}
+                  <div className="flex justify-between mt-4 px-1">
+                    {sizeStops.map((stop, index) => {
+                      const isMinSelected = index === sizeToSliderValue(formData.companySizeMin);
+                      const isMaxSelected = index === sizeToSliderValue(formData.companySizeMax);
+                      const isInRange = index >= sizeToSliderValue(formData.companySizeMin) && 
+                                       index <= sizeToSliderValue(formData.companySizeMax);
+                      
+                      return (
+                        <div key={stop.value} className="flex flex-col items-center relative">
+                          {/* Min/Max indicators */}
+                          {(isMinSelected || isMaxSelected) && (
+                            <div 
+                              className="absolute -top-8 bg-primary text-primary-foreground text-xs px-2 py-1 rounded whitespace-nowrap cursor-grab active:cursor-grabbing select-none hover:bg-primary/90 transition-colors"
+                              onMouseDown={(e) => handleIndicatorMouseDown(isMinSelected ? 'min' : 'max', e)}
+                            >
+                              {isMinSelected && isMaxSelected ? 'Min/Max' : isMinSelected ? 'Min' : 'Max'}
+                            </div>
+                          )}
+                          
+                          <div 
+                            className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                              isInRange ? 'bg-primary scale-110' : 'bg-muted-foreground/40'
+                            }`}
+                          />
+                          <span className={`text-xs mt-1.5 font-medium transition-colors ${
+                            isInRange ? 'text-primary' : 'text-muted-foreground'
+                          }`}>
+                            {stop.label}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
