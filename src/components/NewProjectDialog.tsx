@@ -340,9 +340,9 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               <p className="text-xs text-muted-foreground mt-1">Select the range of employees</p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Slider Container */}
-              <div className="lg:col-span-2 relative px-3 py-4 bg-muted/30 rounded-lg border">
+              <div className="lg:col-span-2 relative px-3 py-4 bg-muted/30 rounded-lg border h-[120px] flex flex-col justify-center">
                 <Slider
                   value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
                   onValueChange={handleSliderChange}
@@ -354,31 +354,39 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
                 
                 {/* Labels below slider */}
                 <div className="flex justify-between mt-4 px-1">
-                  {sizeStops.map((stop, index) => (
-                    <div key={stop.value} className="flex flex-col items-center">
-                      <div 
-                        className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                          index >= sizeToSliderValue(formData.companySizeMin) && 
-                          index <= sizeToSliderValue(formData.companySizeMax)
-                            ? 'bg-primary scale-110' 
-                            : 'bg-muted-foreground/40'
-                        }`}
-                      />
-                      <span className={`text-xs mt-1.5 font-medium transition-colors ${
-                        index >= sizeToSliderValue(formData.companySizeMin) && 
-                        index <= sizeToSliderValue(formData.companySizeMax)
-                          ? 'text-primary' 
-                          : 'text-muted-foreground'
-                      }`}>
-                        {stop.label}
-                      </span>
-                    </div>
-                  ))}
+                  {sizeStops.map((stop, index) => {
+                    const isMinSelected = index === sizeToSliderValue(formData.companySizeMin);
+                    const isMaxSelected = index === sizeToSliderValue(formData.companySizeMax);
+                    const isInRange = index >= sizeToSliderValue(formData.companySizeMin) && 
+                                     index <= sizeToSliderValue(formData.companySizeMax);
+                    
+                    return (
+                      <div key={stop.value} className="flex flex-col items-center relative">
+                        {/* Min/Max indicators */}
+                        {(isMinSelected || isMaxSelected) && (
+                          <div className="absolute -top-8 bg-primary text-primary-foreground text-xs px-2 py-1 rounded whitespace-nowrap">
+                            {isMinSelected && isMaxSelected ? 'Min/Max' : isMinSelected ? 'Min' : 'Max'}
+                          </div>
+                        )}
+                        
+                        <div 
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                            isInRange ? 'bg-primary scale-110' : 'bg-muted-foreground/40'
+                          }`}
+                        />
+                        <span className={`text-xs mt-1.5 font-medium transition-colors ${
+                          isInRange ? 'text-primary' : 'text-muted-foreground'
+                        }`}>
+                          {stop.label}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Selected Range Display */}
-              <div className="bg-primary/10 rounded-lg p-4 text-center border border-primary/20">
+              <div className="bg-primary/10 rounded-lg p-4 text-center border border-primary/20 h-[120px] flex flex-col justify-center">
                 <div className="text-xs text-muted-foreground mb-1 font-medium">Selected Range</div>
                 <div className="text-sm font-semibold text-primary">
                   {formatSize(formData.companySizeMin)} – {formatSize(formData.companySizeMax)} employees
