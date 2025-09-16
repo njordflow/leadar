@@ -124,10 +124,27 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-      <div className="bg-background rounded-2xl shadow-2xl border border-border max-w-6xl w-full max-h-[90vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="relative bg-background rounded-2xl shadow-2xl border border-border max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        {/* Close button - positioned absolutely in top-right corner */}
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 h-8 w-8 p-0 rounded-full hover:bg-muted"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+
         {/* Header */}
-        <div className="bg-gradient-card border-b border-border p-6">
+        <div className="bg-gradient-card border-b border-border p-6 pr-16">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 ring-4 ring-primary/20">
@@ -159,9 +176,6 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                   <path d="M14.822 10.308a3.018 3.018 0 111.32-4.038 3.006 3.006 0 01-1.32 4.044zM11.6.572c2.47-.901 5.294-.852 7.408.982a3.587 3.587 0 011.023 1.37c.213.69-.749-.07-.88-.168a9.407 9.407 0 00-2.15-1.095C12.837.386 8.897 2.707 6.463 6.316a19.505 19.505 0 00-2.248 5.126 2.918 2.918 0 01-.213.642c-.107.204-.049-.547-.049-.572a15.821 15.821 0 01.43-2.239C5.511 5.34 8.01 2.065 11.6.565zm.037 20.993v-8.763c.249.025.486.037.736.037a6.167 6.167 0 003.219-.895v9.62c0 .822-.15 1.43-.52 1.826A1.874 1.874 0 0113.62 24a1.825 1.825 0 01-1.427-.609c-.368-.404-.56-1.013-.56-1.825z"/>
                 </svg>
                 Indeed
-              </Button>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="h-5 w-5" />
               </Button>
             </div>
           </div>
