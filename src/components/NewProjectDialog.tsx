@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -27,7 +28,21 @@ const sizeStops = [
   { value: 500, label: '500' },
   { value: 1000, label: '1k' },
   { value: 10000, label: '10k' },
+  { value: 50000, label: '10k+' },
 ];
+
+// Convert size value to slider position (0-7)
+const sizeToSliderValue = (size: number) => {
+  for (let i = 0; i < sizeStops.length; i++) {
+    if (size <= sizeStops[i].value) return i;
+  }
+  return sizeStops.length - 1;
+};
+
+// Convert slider position to size value
+const sliderValueToSize = (value: number) => {
+  return sizeStops[Math.min(value, sizeStops.length - 1)]?.value || 1;
+};
 
 const roles = [
   'Owner', 'Founder', 'C-suite', 'Partner', 'VP', 'Head', 
@@ -60,22 +75,16 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
   const [countryOpen, setCountryOpen] = useState(false);
   const [jobRoleInput, setJobRoleInput] = useState('');
 
-  const handleSizeChange = (type: 'min' | 'max', value: number) => {
-    setFormData(prev => {
-      const newData = { ...prev };
-      if (type === 'min') {
-        newData.companySizeMin = value;
-        if (value > prev.companySizeMax) {
-          newData.companySizeMax = value;
-        }
-      } else {
-        newData.companySizeMax = value;
-        if (value < prev.companySizeMin) {
-          newData.companySizeMin = value;
-        }
-      }
-      return newData;
-    });
+  const handleSliderChange = (values: number[]) => {
+    const [minIdx, maxIdx] = values;
+    const minSize = sliderValueToSize(minIdx);
+    const maxSize = sliderValueToSize(maxIdx);
+    
+    setFormData(prev => ({
+      ...prev,
+      companySizeMin: minSize,
+      companySizeMax: maxSize
+    }));
   };
 
   const toggleRole = (role: string) => {
@@ -130,6 +139,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
   };
 
   const formatSize = (value: number) => {
+    if (value >= 50000) return '10k+';
     if (value >= 10000) return '10k';
     if (value >= 1000) return `${value / 1000}k`;
     return value.toString();
@@ -330,44 +340,44 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               <p className="text-sm text-muted-foreground mt-1">Select the range of employees</p>
             </div>
             
-            <div className="space-y-4">
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Minimum Size</Label>
-                <div className="flex gap-2 flex-wrap">
-                  {sizeStops.map((stop) => (
-                    <Button
-                      key={`min-${stop.value}`}
-                      variant={formData.companySizeMin === stop.value ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleSizeChange('min', stop.value)}
-                      className="h-8 px-3 text-xs"
-                    >
-                      {stop.label}
-                    </Button>
+            <div className="space-y-6">
+              {/* Slider Container */}
+              <div className="relative px-2">
+                <Slider
+                  value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
+                  onValueChange={handleSliderChange}
+                  max={sizeStops.length - 1}
+                  min={0}
+                  step={1}
+                  className="w-full"
+                />
+                
+                {/* Labels below slider */}
+                <div className="flex justify-between mt-3 px-1">
+                  {sizeStops.map((stop, index) => (
+                    <div key={stop.value} className="flex flex-col items-center">
+                      <div 
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                          index >= sizeToSliderValue(formData.companySizeMin) && 
+                          index <= sizeToSliderValue(formData.companySizeMax)
+                            ? 'bg-primary' 
+                            : 'bg-muted-foreground/30'
+                        }`}
+                      />
+                      <span className="text-xs text-muted-foreground mt-1 font-medium">
+                        {stop.label}
+                      </span>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Maximum Size</Label>
-                <div className="flex gap-2 flex-wrap">
-                  {sizeStops.map((stop) => (
-                    <Button
-                      key={`max-${stop.value}`}
-                      variant={formData.companySizeMax === stop.value ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleSizeChange('max', stop.value)}
-                      className="h-8 px-3 text-xs"
-                      disabled={stop.value < formData.companySizeMin}
-                    >
-                      {stop.label}
-                    </Button>
-                  ))}
+              {/* Selected Range Display */}
+              <div className="bg-muted/30 rounded-lg p-4 text-center">
+                <div className="text-sm text-muted-foreground mb-1">Selected Range</div>
+                <div className="text-lg font-semibold">
+                  {formatSize(formData.companySizeMin)} – {formatSize(formData.companySizeMax)} employees
                 </div>
-              </div>
-
-              <div className="bg-muted/30 rounded-lg p-3 text-sm">
-                Selected: {formatSize(formData.companySizeMin)} – {formatSize(formData.companySizeMax)} employees
               </div>
             </div>
           </div>
