@@ -154,7 +154,6 @@ const CollectedJobs = () => {
     };
     
     setSelectedProspect(mockProspect);
-    setIsJobDetailsOpen(false);
     setIsProspectDetailsOpen(true);
   };
 
@@ -351,7 +350,10 @@ const CollectedJobs = () => {
       {isProspectDetailsOpen && selectedProspect && (
         <ProspectDetails
           prospect={selectedProspect}
-          onClose={() => setIsProspectDetailsOpen(false)}
+          onClose={() => {
+            setIsProspectDetailsOpen(false);
+            setSelectedProspect(null);
+          }}
         />
       )}
     </div>

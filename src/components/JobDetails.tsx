@@ -137,6 +137,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                         {job.type}
                       </Badge>
                     </div>
+                    {job.source && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">Source:</span>
+                        <Badge variant="outline" className="capitalize">
+                          {job.source}
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -222,19 +230,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                 </CardContent>
               </Card>
 
-              {/* Source Info */}
-              {job.source && (
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Source:</span>
-                      <Badge variant="outline" className="capitalize">
-                        {job.source}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </div>
           </div>
         </div>
