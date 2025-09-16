@@ -263,12 +263,26 @@ const CollectedJobs = () => {
                 {currentJobs.map((job) => (
                   <tr 
                     key={job.id} 
-                    className="border-b hover:bg-muted/30 transition-colors"
+                    className="border-b hover:bg-muted/30 transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      // Only open job details if clicking on a non-interactive element
+                      const target = e.target as HTMLElement;
+                      const isButton = target.closest('button');
+                      const isLink = target.closest('a');
+                      const isBadge = target.closest('.cursor-pointer');
+                      
+                      if (!isButton && !isLink && !isBadge) {
+                        handleJobClick(job);
+                      }
+                    }}
                   >
                     <td className="p-4">
                       <div 
                         className="flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
-                        onClick={() => handleJobClick(job)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJobClick(job);
+                        }}
                       >
                         {getSourceIcon(job.source)}
                       </div>
@@ -311,7 +325,10 @@ const CollectedJobs = () => {
                         variant="outline" 
                         size="sm" 
                         className="gap-1"
-                        onClick={() => handleJobClick(job)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJobClick(job);
+                        }}
                       >
                         <ExternalLink className="h-3 w-3" />
                         Open

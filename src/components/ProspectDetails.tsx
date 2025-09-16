@@ -137,8 +137,12 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 h-8 w-8 p-0 rounded-full hover:bg-muted"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-4 right-4 z-[70] h-8 w-8 p-0 rounded-full hover:bg-muted border border-border/20 bg-background/80 backdrop-blur-sm"
         >
           <X className="h-4 w-4" />
         </Button>
