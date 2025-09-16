@@ -96,9 +96,9 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                       isActive(item.url)
                         ? 'bg-accent text-accent-foreground font-medium'
                         : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
-                    } transition-all ${collapsed ? 'justify-center' : ''}`}
+                    } transition-all h-12 ${collapsed ? 'px-0' : ''}`}
                   >
-                    <NavLink to={item.url} className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-3'}`}>
+                    <NavLink to={item.url} className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-3'}`}>
                       <item.icon className="h-6 w-6 flex-shrink-0" />
                       {!collapsed && <span className="text-base font-semibold">{item.title}</span>}
                     </NavLink>
@@ -123,9 +123,9 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     isActive('/feedback')
                       ? 'bg-accent text-accent-foreground font-medium'
                       : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
-                  } transition-all ${collapsed ? 'justify-center' : ''}`}
+                  } transition-all h-12 ${collapsed ? 'px-0' : ''}`}
                 >
-                  <NavLink to="/feedback" className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-3'}`}>
+                  <NavLink to="/feedback" className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-3'}`}>
                     <MessageSquare className="h-6 w-6 flex-shrink-0" />
                     {!collapsed && <span className="text-base font-semibold">Feedback & Issues</span>}
                   </NavLink>
