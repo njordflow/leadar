@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building } from 'lucide-react';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -313,7 +313,7 @@ const CollectedJobs = () => {
                         className="gap-1"
                         onClick={() => handleJobClick(job)}
                       >
-                        <Globe className="h-3 w-3" />
+                        <ExternalLink className="h-3 w-3" />
                         Open
                       </Button>
                     </td>
