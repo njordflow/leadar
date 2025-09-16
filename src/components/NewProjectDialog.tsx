@@ -177,7 +177,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>New Project</DialogTitle>
         </DialogHeader>
@@ -340,9 +340,9 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               <p className="text-xs text-muted-foreground mt-1">Select the range of employees</p>
             </div>
             
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-end">
               {/* Slider Container */}
-              <div className="relative px-3 py-4 bg-muted/30 rounded-lg border">
+              <div className="lg:col-span-2 relative px-3 py-4 bg-muted/30 rounded-lg border">
                 <Slider
                   value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
                   onValueChange={handleSliderChange}
@@ -380,7 +380,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               {/* Selected Range Display */}
               <div className="bg-primary/10 rounded-lg p-4 text-center border border-primary/20">
                 <div className="text-xs text-muted-foreground mb-1 font-medium">Selected Range</div>
-                <div className="text-base font-semibold text-primary">
+                <div className="text-sm font-semibold text-primary">
                   {formatSize(formData.companySizeMin)} – {formatSize(formData.companySizeMax)} employees
                 </div>
               </div>
