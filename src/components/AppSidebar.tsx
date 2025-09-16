@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const menuItems = [
   { title: 'Projects', url: '/projects', icon: Building2, active: true },
@@ -85,9 +86,6 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
       <SidebarContent className={collapsed ? 'px-1' : 'px-2'}>
         <SidebarGroup>
-          <SidebarGroupLabel className={collapsed ? 'px-2 text-center' : ''}>
-            {!collapsed && 'Navigation'}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -140,44 +138,80 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
       <SidebarFooter className="border-t border-border/50">
         <div className={collapsed ? 'p-2' : 'p-4'}>
-          {!collapsed && (
-            <div className="flex items-center gap-3 mb-4">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                  AD
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">Admin User</p>
-                <p className="text-xs text-muted-foreground truncate">admin@leadflow.pro</p>
-              </div>
-            </div>
+          {collapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="w-full h-10">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src="" />
+                        <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs">
+                          AD
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="right" align="end" className="w-48">
+                    <div className="flex items-center gap-2 p-2 border-b">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="" />
+                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                          AD
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">Admin User</p>
+                        <p className="text-xs text-muted-foreground truncate">admin@leadflow.pro</p>
+                      </div>
+                    </div>
+                    <DropdownMenuItem asChild>
+                      <NavLink to="/settings" className="flex items-center gap-2 w-full">
+                        <Settings className="h-4 w-4" />
+                        <span>Settings</span>
+                      </NavLink>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={onLogout} className="flex items-center gap-2 text-destructive focus:text-destructive">
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>User menu</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-3 w-full h-auto p-2 justify-start hover:bg-muted/50">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                      AD
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-sm font-medium truncate">Admin User</p>
+                    <p className="text-xs text-muted-foreground truncate">admin@leadflow.pro</p>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <NavLink to="/settings" className="flex items-center gap-2 w-full">
+                    <Settings className="h-4 w-4" />
+                    <span>Settings</span>
+                  </NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onLogout} className="flex items-center gap-2 text-destructive focus:text-destructive">
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
-          
-          <div className={`flex ${collapsed ? 'flex-col gap-1' : 'gap-2'}`}>
-            <Button
-              variant="ghost"
-              size={collapsed ? 'icon' : 'sm'}
-              className={`hover:bg-muted/50 transition-colors ${collapsed ? 'w-full' : ''}`}
-              asChild
-            >
-              <NavLink to="/settings" className={`flex items-center w-full ${collapsed ? 'justify-center' : 'gap-2'}`}>
-                <Settings className="h-6 w-6" />
-                {!collapsed && <span className="text-base font-semibold">Settings</span>}
-              </NavLink>
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size={collapsed ? 'icon' : 'sm'}
-              onClick={onLogout}
-              className={`hover:bg-destructive/10 hover:text-destructive transition-colors ${collapsed ? 'w-full' : ''}`}
-            >
-              <LogOut className="h-6 w-6" />
-              {!collapsed && <span className="ml-2 text-base font-semibold">Logout</span>}
-            </Button>
-          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
