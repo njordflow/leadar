@@ -75,6 +75,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
   const [countryOpen, setCountryOpen] = useState(false);
   const [jobRoleInput, setJobRoleInput] = useState('');
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+  const sliderContainerRef = React.useRef<HTMLDivElement>(null);
 
   const handleSliderChange = (values: number[]) => {
     const [minIdx, maxIdx] = values;
@@ -93,10 +94,10 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
     setIsDragging(type);
   };
 
-  const handleIndicatorDrag = (e: React.MouseEvent, containerRef: React.RefObject<HTMLDivElement>) => {
-    if (!isDragging || !containerRef.current) return;
+  const handleMouseMove = React.useCallback((e: MouseEvent) => {
+    if (!isDragging || !sliderContainerRef.current) return;
 
-    const rect = containerRef.current.getBoundingClientRect();
+    const rect = sliderContainerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const width = rect.width;
     const percentage = Math.max(0, Math.min(1, x / width));
@@ -113,18 +114,22 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
       const newMaxSize = sliderValueToSize(validMaxIndex);
       setFormData(prev => ({ ...prev, companySizeMax: newMaxSize }));
     }
-  };
+  }, [isDragging, formData.companySizeMax, formData.companySizeMin]);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = React.useCallback(() => {
     setIsDragging(null);
-  };
+  }, []);
 
   React.useEffect(() => {
     if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
-      return () => document.removeEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
     }
-  }, [isDragging]);
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   const toggleRole = (role: string) => {
     setFormData(prev => ({
@@ -383,21 +388,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               {/* Slider Container */}
               <div className="lg:col-span-2 relative px-3 py-4 bg-muted/30 rounded-lg border h-[120px] flex flex-col justify-center">
                 <div 
-                  ref={(ref) => {
-                    const containerRef = React.useRef(ref);
-                    React.useEffect(() => {
-                      const handleMouseMove = (e: MouseEvent) => {
-                        if (isDragging && containerRef.current) {
-                          handleIndicatorDrag(e as any, containerRef);
-                        }
-                      };
-                      
-                      if (isDragging) {
-                        document.addEventListener('mousemove', handleMouseMove);
-                        return () => document.removeEventListener('mousemove', handleMouseMove);
-                      }
-                    }, [isDragging]);
-                  }}
+                  ref={sliderContainerRef}
                   className="relative"
                 >
                   <Slider
