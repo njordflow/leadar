@@ -96,11 +96,13 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                       isActive(item.url)
                         ? 'bg-accent text-accent-foreground font-medium'
                         : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
-                    } transition-all h-12 ${collapsed ? 'px-0' : ''}`}
+                    } transition-all h-12 ${collapsed ? 'px-0' : 'px-2'}`}
                   >
-                    <NavLink to={item.url} className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-3'}`}>
+                    <NavLink to={item.url} className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-2'}`}>
                       <item.icon className="h-6 w-6 flex-shrink-0" />
-                      {!collapsed && <span className="text-base font-semibold">{item.title}</span>}
+                      <span className={`text-base font-semibold transition-all duration-300 ${collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
+                        {item.title}
+                      </span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -123,11 +125,13 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
                     isActive('/feedback')
                       ? 'bg-accent text-accent-foreground font-medium'
                       : 'hover:bg-accent/50 text-muted-foreground hover:text-foreground'
-                  } transition-all h-12 ${collapsed ? 'px-0' : ''}`}
+                  } transition-all h-12 ${collapsed ? 'px-0' : 'px-2'}`}
                 >
-                  <NavLink to="/feedback" className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-3'}`}>
+                  <NavLink to="/feedback" className={`flex items-center w-full h-full ${collapsed ? 'justify-center' : 'gap-3 px-2'}`}>
                     <MessageSquare className="h-6 w-6 flex-shrink-0" />
-                    {!collapsed && <span className="text-base font-semibold">Feedback & Issues</span>}
+                    <span className={`text-base font-semibold transition-all duration-300 ${collapsed ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100'}`}>
+                      Feedback & Issues
+                    </span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
