@@ -39,7 +39,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
   return (
     <TooltipProvider>
-      <Sidebar collapsible="icon">{/* Remove manual width classes - use built-in animations */}
+      <Sidebar collapsible="icon" className="w-56">{/* Narrower sidebar - 224px instead of default 256px */}
         <SidebarHeader className="border-b border-border/50 p-4">
           <div className="flex items-center justify-between">
             {/* Logo and Title */}
