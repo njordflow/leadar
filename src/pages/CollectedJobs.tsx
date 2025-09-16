@@ -1,19 +1,22 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, MoreHorizontal, Globe, Building } from 'lucide-react';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import ExportDialog from '@/components/ExportDialog';
+import JobDetails from '@/components/JobDetails';
 import Pagination from '@/components/Pagination';
 import { toast } from 'sonner';
+import indeedLogo from '@/assets/indeed-logo.svg';
 
 const CollectedJobs = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -37,6 +40,8 @@ const CollectedJobs = () => {
       type: 'Full-time',
       remote: true,
       website: 'carbonrobotics.com',
+      source: 'indeed',
+      url: 'https://indeed.com/job/senior-software-engineer-123',
     },
     {
       id: 2,
@@ -50,6 +55,8 @@ const CollectedJobs = () => {
       type: 'Full-time',
       remote: false,
       website: 'stpaulgroup.com',
+      source: 'linkedin',
+      url: 'https://linkedin.com/jobs/marketing-manager-456',
     },
     {
       id: 3,
@@ -63,6 +70,8 @@ const CollectedJobs = () => {
       type: 'Full-time',
       remote: true,
       website: 'electronic-logistics.nl',
+      source: 'indeed',
+      url: 'https://indeed.com/job/devops-engineer-789',
     },
     {
       id: 4,
@@ -76,6 +85,8 @@ const CollectedJobs = () => {
       type: 'Full-time',
       remote: false,
       website: 'schmidt-relocation.com',
+      source: 'linkedin',
+      url: 'https://linkedin.com/jobs/data-analyst-101',
     }
   ];
 
@@ -114,6 +125,22 @@ const CollectedJobs = () => {
   const handleExport = () => {
     toast.success("Export completed successfully!");
     setIsExportDialogOpen(false);
+  };
+
+  const handleJobClick = (job: any) => {
+    setSelectedJob(job);
+    setIsJobDetailsOpen(true);
+  };
+
+  const getSourceIcon = (source: string) => {
+    switch (source) {
+      case 'indeed':
+        return <img src={indeedLogo} alt="Indeed" className="h-4 w-4" />;
+      case 'linkedin':
+        return <div className="h-4 w-4 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">in</div>;
+      default:
+        return <Globe className="h-4 w-4" />;
+    }
   };
 
   return (
@@ -198,6 +225,7 @@ const CollectedJobs = () => {
             <table className="w-full">
               <thead className="border-b bg-muted/50">
                 <tr>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Source</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Company & Job</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Location</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Salary</th>
@@ -212,6 +240,14 @@ const CollectedJobs = () => {
                     key={job.id} 
                     className="border-b hover:bg-muted/30 transition-colors"
                   >
+                    <td className="p-4">
+                      <div 
+                        className="flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+                        onClick={() => handleJobClick(job)}
+                      >
+                        {getSourceIcon(job.source)}
+                      </div>
+                    </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
@@ -246,25 +282,15 @@ const CollectedJobs = () => {
                       </Badge>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-1">
-                          <Globe className="h-3 w-3" />
-                          View
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Save Job</DropdownMenuItem>
-                            <DropdownMenuItem>Add to Prospects</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive">Mark as Duplicate</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="gap-1"
+                        onClick={() => handleJobClick(job)}
+                      >
+                        <Globe className="h-3 w-3" />
+                        Open
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -287,6 +313,12 @@ const CollectedJobs = () => {
         onOpenChange={setIsExportDialogOpen}
         totalCompanies={filteredJobs.length}
         currentPageCompanies={currentJobs.length}
+      />
+
+      <JobDetails
+        job={selectedJob}
+        open={isJobDetailsOpen}
+        onOpenChange={setIsJobDetailsOpen}
       />
     </div>
   );

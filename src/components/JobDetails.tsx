@@ -1,0 +1,240 @@
+import React from 'react';
+import { ExternalLink, MapPin, Building2, DollarSign, Calendar, AlertTriangle, Eye, Briefcase, Users, Globe } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+
+interface Job {
+  id: number;
+  company: string;
+  logo: string;
+  title: string;
+  location: string;
+  posted: string;
+  deadline: string;
+  salary: string;
+  type: string;
+  remote: boolean;
+  website: string;
+  description?: string;
+  url?: string;
+  source?: 'indeed' | 'linkedin';
+}
+
+interface JobDetailsProps {
+  job: Job | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
+  if (!job) return null;
+
+  const handleReportIssue = () => {
+    toast.success("Issue reported successfully!");
+  };
+
+  const handleOpenJobUrl = () => {
+    if (job.url) {
+      window.open(job.url, '_blank');
+    }
+  };
+
+  const handleViewProspect = () => {
+    toast.info("Redirecting to prospect details...");
+    // Here you would navigate to the prospect page
+  };
+
+  const companyInfo = {
+    industry: 'Technology & Software',
+    size: '51-200 employees',
+    revenue: '$10M - $50M',
+    founded: '2018',
+    description: `${job.company} develops innovative solutions for modern businesses. Their technology helps companies streamline operations and improve efficiency through advanced automation and data analytics.`
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={`https://logo.clearbit.com/${job.website}`} />
+              <AvatarFallback className="bg-primary-light text-primary font-medium">
+                {job.logo}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="text-xl font-semibold">{job.title}</h2>
+              <p className="text-muted-foreground">{job.company}</p>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Quick Actions */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <Button 
+              variant="default" 
+              className="gap-2"
+              onClick={handleOpenJobUrl}
+              disabled={!job.url}
+            >
+              <ExternalLink className="h-4 w-4" />
+              Open Job
+            </Button>
+            <Button variant="outline" className="gap-2" onClick={handleViewProspect}>
+              <Eye className="h-4 w-4" />
+              View Prospect
+            </Button>
+            <Button variant="outline" className="gap-2 text-destructive" onClick={handleReportIssue}>
+              <AlertTriangle className="h-4 w-4" />
+              Report an Issue
+            </Button>
+          </div>
+
+          <Separator />
+
+          {/* Job Details */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Job Info */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Briefcase className="h-5 w-5" />
+                    Job Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{job.location}</span>
+                      {job.remote && (
+                        <Badge variant="outline" className="ml-2 text-xs bg-success-light text-success border-success/20">
+                          Remote
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">{job.salary}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">Posted {job.posted}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Briefcase className="h-4 w-4 text-muted-foreground" />
+                      <Badge variant="outline" className="bg-secondary-light text-secondary border-secondary/20">
+                        {job.type}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Job Description */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Job Description</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none">
+                    <p>{job.description || `We are looking for a talented ${job.title} to join our growing team at ${job.company}. This is an excellent opportunity to work with cutting-edge technologies and contribute to innovative projects that make a real impact.`}</p>
+                    
+                    <h4>Key Responsibilities:</h4>
+                    <ul>
+                      <li>Develop and maintain high-quality software solutions</li>
+                      <li>Collaborate with cross-functional teams to deliver projects</li>
+                      <li>Participate in code reviews and technical discussions</li>
+                      <li>Contribute to architecture and design decisions</li>
+                    </ul>
+
+                    <h4>Requirements:</h4>
+                    <ul>
+                      <li>Bachelor's degree in Computer Science or related field</li>
+                      <li>3+ years of relevant experience</li>
+                      <li>Strong problem-solving and communication skills</li>
+                      <li>Experience with modern development frameworks</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Company Info Sidebar */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    Company Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Industry</p>
+                      <p className="text-sm">{companyInfo.industry}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Company Size</p>
+                      <p className="text-sm flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        {companyInfo.size}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Revenue</p>
+                      <p className="text-sm">{companyInfo.revenue}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Founded</p>
+                      <p className="text-sm">{companyInfo.founded}</p>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
+                    <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
+                  </div>
+
+                  <div className="pt-2">
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Globe className="h-3 w-3" />
+                      Visit Website
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Source Info */}
+              {job.source && (
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Source:</span>
+                      <Badge variant="outline" className="capitalize">
+                        {job.source}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default JobDetails;
