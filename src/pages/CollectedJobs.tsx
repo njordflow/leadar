@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import ExportDialog from '@/components/ExportDialog';
 import JobDetails from '@/components/JobDetails';
+import ProspectDetails from '@/components/ProspectDetails';
 import Pagination from '@/components/Pagination';
 import { toast } from 'sonner';
 import indeedLogo from '@/assets/indeed-logo.svg';
@@ -17,6 +18,8 @@ const CollectedJobs = () => {
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
+  const [selectedProspect, setSelectedProspect] = useState(null);
+  const [isProspectDetailsOpen, setIsProspectDetailsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -130,6 +133,29 @@ const CollectedJobs = () => {
   const handleJobClick = (job: any) => {
     setSelectedJob(job);
     setIsJobDetailsOpen(true);
+  };
+
+  const handleOpenProspect = (companyName: string) => {
+    // Create a mock prospect based on the company
+    const mockProspect = {
+      id: Math.random(),
+      company: companyName,
+      industry: 'Technology & Software',
+      employees: '51-200',
+      revenue: '$10M - $50M',
+      location: 'Seattle, WA',
+      website: `${companyName.toLowerCase().replace(/\s+/g, '')}.com`,
+      founded: '2018',
+      status: 'New',
+      priority: 'High',
+      lastContact: '2 days ago',
+      source: 'Job Board',
+      tags: ['Tech Company', 'Hiring']
+    };
+    
+    setSelectedProspect(mockProspect);
+    setIsJobDetailsOpen(false);
+    setIsProspectDetailsOpen(true);
   };
 
   const getSourceIcon = (source: string) => {
@@ -319,7 +345,15 @@ const CollectedJobs = () => {
         job={selectedJob}
         open={isJobDetailsOpen}
         onOpenChange={setIsJobDetailsOpen}
+        onOpenProspect={handleOpenProspect}
       />
+
+      {isProspectDetailsOpen && selectedProspect && (
+        <ProspectDetails
+          prospect={selectedProspect}
+          onClose={() => setIsProspectDetailsOpen(false)}
+        />
+      )}
     </div>
   );
 };

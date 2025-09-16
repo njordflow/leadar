@@ -29,9 +29,10 @@ interface JobDetailsProps {
   job: Job | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenProspect?: (companyName: string) => void;
 }
 
-const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
+const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpenProspect }) => {
   if (!job) return null;
 
   const handleReportIssue = () => {
@@ -45,8 +46,9 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
   };
 
   const handleViewProspect = () => {
-    toast.info("Redirecting to prospect details...");
-    // Here you would navigate to the prospect page
+    if (onOpenProspect) {
+      onOpenProspect(job.company);
+    }
   };
 
   const companyInfo = {
@@ -59,7 +61,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
@@ -91,7 +93,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
               <Eye className="h-4 w-4" />
               View Prospect
             </Button>
-            <Button variant="outline" className="gap-2 text-destructive" onClick={handleReportIssue}>
+            <Button variant="destructive" className="gap-2" onClick={handleReportIssue}>
               <AlertTriangle className="h-4 w-4" />
               Report an Issue
             </Button>
@@ -207,10 +209,14 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange }) => {
                     <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
                   </div>
 
-                  <div className="pt-2">
+                  <div className="pt-2 space-y-2">
                     <Button variant="outline" size="sm" className="w-full gap-2">
                       <Globe className="h-3 w-3" />
                       Visit Website
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleViewProspect}>
+                      <Eye className="h-3 w-3" />
+                      Open Prospect
                     </Button>
                   </div>
                 </CardContent>
