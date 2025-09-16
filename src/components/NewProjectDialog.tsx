@@ -22,9 +22,9 @@ interface NewProjectDialogProps {
 
 const sizeStops = [
   { value: 1, label: '1' },
-  { value: 10, label: '10' },
-  { value: 50, label: '50' },
+  { value: 25, label: '25' },
   { value: 100, label: '100' },
+  { value: 250, label: '250' },
   { value: 500, label: '500' },
   { value: 1000, label: '1k' },
   { value: 10000, label: '10k' },
@@ -62,7 +62,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    companySizeMin: 50,
+    companySizeMin: 25,
     companySizeMax: 500,
     selectedRoles: [] as string[],
     selectedCountries: [] as string[],
@@ -165,7 +165,7 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
     setFormData({
       name: '',
       description: '',
-      companySizeMin: 50,
+      companySizeMin: 25,
       companySizeMax: 500,
       selectedRoles: [],
       selectedCountries: [],
@@ -334,37 +334,42 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
           <Separator />
 
           {/* Company Size */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <Label>Company Size</Label>
+              <Label className="text-base font-semibold">Company Size</Label>
               <p className="text-sm text-muted-foreground mt-1">Select the range of employees</p>
             </div>
             
             <div className="space-y-6">
               {/* Slider Container */}
-              <div className="relative px-2">
+              <div className="relative px-4 py-6 bg-gradient-to-br from-background to-muted/20 rounded-xl border">
                 <Slider
                   value={[sizeToSliderValue(formData.companySizeMin), sizeToSliderValue(formData.companySizeMax)]}
                   onValueChange={handleSliderChange}
                   max={sizeStops.length - 1}
                   min={0}
                   step={1}
-                  className="w-full"
+                  className="w-full [&_[role=slider]]:h-6 [&_[role=slider]]:w-6 [&_[role=slider]]:border-4 [&_[role=slider]]:border-white [&_[role=slider]]:shadow-lg [&_[role=slider]]:ring-2 [&_[role=slider]]:ring-primary/20"
                 />
                 
                 {/* Labels below slider */}
-                <div className="flex justify-between mt-3 px-1">
+                <div className="flex justify-between mt-6 px-1">
                   {sizeStops.map((stop, index) => (
                     <div key={stop.value} className="flex flex-col items-center">
                       <div 
-                        className={`w-2 h-2 rounded-full transition-colors ${
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
                           index >= sizeToSliderValue(formData.companySizeMin) && 
                           index <= sizeToSliderValue(formData.companySizeMax)
-                            ? 'bg-primary' 
-                            : 'bg-muted-foreground/30'
+                            ? 'bg-primary shadow-lg scale-110' 
+                            : 'bg-muted-foreground/40'
                         }`}
                       />
-                      <span className="text-xs text-muted-foreground mt-1 font-medium">
+                      <span className={`text-xs mt-2 font-semibold transition-colors ${
+                        index >= sizeToSliderValue(formData.companySizeMin) && 
+                        index <= sizeToSliderValue(formData.companySizeMax)
+                          ? 'text-primary' 
+                          : 'text-muted-foreground'
+                      }`}>
                         {stop.label}
                       </span>
                     </div>
@@ -373,9 +378,9 @@ export function NewProjectDialog({ open, onOpenChange, onSave }: NewProjectDialo
               </div>
 
               {/* Selected Range Display */}
-              <div className="bg-muted/30 rounded-lg p-4 text-center">
-                <div className="text-sm text-muted-foreground mb-1">Selected Range</div>
-                <div className="text-lg font-semibold">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-6 text-center border border-primary/20">
+                <div className="text-sm text-muted-foreground mb-2 font-medium">Selected Range</div>
+                <div className="text-xl font-bold text-primary">
                   {formatSize(formData.companySizeMin)} – {formatSize(formData.companySizeMax)} employees
                 </div>
               </div>
