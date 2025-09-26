@@ -46,7 +46,10 @@ const CollectedJobs = () => {
       source: 'indeed',
       url: 'https://indeed.com/job/senior-software-engineer-123',
       aiRating: 4.5,
-      aiFeedback: { totalRatings: 12, lastRated: '1 day ago' }
+      aiFeedback: { totalRatings: 12, lastRated: '1 day ago' },
+      ai_match: 'qualified' as const,
+      ai_reasoning: 'Strong technical requirements match with comprehensive benefits package. The role aligns well with senior-level expectations and includes modern tech stack.',
+      ai_updated_at: '2024-01-15T10:30:00Z'
     },
     {
       id: 2,
@@ -63,7 +66,10 @@ const CollectedJobs = () => {
       source: 'linkedin',
       url: 'https://linkedin.com/jobs/marketing-manager-456',
       aiRating: 3.2,
-      aiFeedback: { totalRatings: 8, lastRated: '3 hours ago' }
+      aiFeedback: { totalRatings: 8, lastRated: '3 hours ago' },
+      ai_match: 'not_a_match' as const,
+      ai_reasoning: 'Marketing role does not align with technical service offerings. Company focus appears to be in different industry vertical.',
+      ai_updated_at: '2024-01-15T08:45:00Z'
     },
     {
       id: 3,
@@ -80,7 +86,10 @@ const CollectedJobs = () => {
       source: 'indeed',
       url: 'https://indeed.com/job/devops-engineer-789',
       aiRating: null,
-      aiFeedback: null
+      aiFeedback: null,
+      ai_match: 'not_analyzed' as const,
+      ai_reasoning: null,
+      ai_updated_at: null
     },
     {
       id: 4,
@@ -97,7 +106,10 @@ const CollectedJobs = () => {
       source: 'linkedin',
       url: 'https://linkedin.com/jobs/data-analyst-101',
       aiRating: 4.8,
-      aiFeedback: { totalRatings: 5, lastRated: '2 hours ago' }
+      aiFeedback: { totalRatings: 5, lastRated: '2 hours ago' },
+      ai_match: 'qualified' as const,
+      ai_reasoning: 'Data analytics role with growth potential. Company size and requirements indicate good fit for expanding data capabilities.',
+      ai_updated_at: '2024-01-15T06:20:00Z'
     }
   ];
 
@@ -264,7 +276,7 @@ const CollectedJobs = () => {
                   <th className="text-left p-4 font-medium text-muted-foreground">Salary</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Posted</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Type</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">AI Rating</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">AI Match</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
@@ -336,17 +348,28 @@ const CollectedJobs = () => {
                       </Badge>
                     </td>
                     <td className="p-4">
-                      {job.aiRating ? (
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-medium text-sm">{job.aiRating.toFixed(1)}</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">({job.aiFeedback?.totalRatings})</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Not rated</span>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {job.ai_match === 'qualified' && (
+                          <Badge variant="default" className="bg-success text-white border-success">
+                            Qualified
+                          </Badge>
+                        )}
+                        {job.ai_match === 'not_a_match' && (
+                          <Badge variant="destructive" className="bg-destructive text-white border-destructive">
+                            Not a Match
+                          </Badge>
+                        )}
+                        {job.ai_match === 'not_analyzed' && (
+                          <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/20">
+                            Not Analyzed
+                          </Badge>
+                        )}
+                        {job.ai_updated_at && (
+                          <span className="text-xs text-muted-foreground">
+                            Updated {new Date(job.ai_updated_at).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="p-4">
                       <Button 
