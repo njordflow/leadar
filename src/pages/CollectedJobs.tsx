@@ -354,13 +354,19 @@ const CollectedJobs = () => {
                         'Not Analyzed'
                       }>
                         {job.ai_match === 'qualified' && (
-                          <CheckCircle className="h-6 w-6 text-success fill-success/20" />
+                          <Badge className="bg-success text-success-foreground border-success/20">
+                            Qualified
+                          </Badge>
                         )}
                         {job.ai_match === 'not_a_match' && (
-                          <XCircle className="h-6 w-6 text-destructive fill-destructive/20" />
+                          <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
+                            Not a Match
+                          </Badge>
                         )}
                         {job.ai_match === 'not_analyzed' && (
-                          <Clock className="h-6 w-6 text-muted-foreground fill-muted/20" />
+                          <Badge variant="secondary" className="bg-muted text-muted-foreground">
+                            Not Analyzed
+                          </Badge>
                         )}
                       </div>
                     </td>
