@@ -58,9 +58,9 @@ const AIAnalysisRating: React.FC = () => {
 
   const handleRatingClick = (rating: number) => {
     setSelectedRating(rating);
-    setShowComment(rating <= 2);
+    setShowComment(rating <= 3);
     
-    if (rating >= 3) {
+    if (rating >= 4) {
       setComment('');
       // Submit positive feedback immediately
       const label = ratingLabels[rating as keyof typeof ratingLabels];
@@ -84,25 +84,33 @@ const AIAnalysisRating: React.FC = () => {
     <div className="space-y-3">
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
-          <div key={star} className="flex flex-col items-center">
-            <button
-              onClick={() => handleRatingClick(star)}
-              className="p-1 hover:scale-110 transition-transform group"
-            >
-              <Star 
-                className={`h-5 w-5 transition-colors ${
-                  selectedRating && star <= selectedRating
-                    ? 'fill-yellow-400 text-yellow-400' 
-                    : 'text-gray-300 hover:text-yellow-300'
-                }`}
-              />
-            </button>
-          </div>
+          <button
+            key={star}
+            onClick={() => handleRatingClick(star)}
+            className={`p-2 rounded-lg hover:scale-110 transition-all group border-2 ${
+              selectedRating && star <= selectedRating
+                ? 'border-yellow-300 bg-yellow-50/50' 
+                : 'border-transparent hover:border-yellow-200 hover:bg-yellow-50/30'
+            }`}
+          >
+            <Star 
+              className={`h-5 w-5 transition-colors ${
+                selectedRating && star <= selectedRating
+                  ? 'fill-yellow-400 text-yellow-500' 
+                  : 'text-gray-300 group-hover:text-yellow-400'
+              }`}
+            />
+          </button>
         ))}
         {selectedRating && (
-          <span className="ml-2 text-sm font-medium text-muted-foreground">
-            {ratingLabels[selectedRating as keyof typeof ratingLabels]}
-          </span>
+          <div className="ml-3 flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">
+              {selectedRating}/5
+            </span>
+            <span className="text-sm font-medium text-foreground">
+              {ratingLabels[selectedRating as keyof typeof ratingLabels]}
+            </span>
+          </div>
         )}
       </div>
       
