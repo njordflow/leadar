@@ -390,21 +390,11 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                 </div>
                 
                 {job.ai_reasoning && job.ai_match !== 'not_analyzed' && (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <span className="text-sm font-medium">Reasoning:</span>
-                      <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
-                        {job.ai_reasoning}
-                      </p>
-                    </div>
-                    
-                    {/* AI Analysis Rating */}
-                    <div className="border-t pt-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium">Rate this analysis:</span>
-                      </div>
-                      <AIAnalysisRating />
-                    </div>
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium">Reasoning:</span>
+                    <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                      {job.ai_reasoning}
+                    </p>
                   </div>
                 )}
                 
@@ -414,6 +404,57 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                   </p>
                 )}
               </div>
+
+              {/* Company Overview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    Company Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Industry</p>
+                      <p className="text-sm">{companyInfo.industry}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Company Size</p>
+                      <p className="text-sm flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        {companyInfo.size}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Revenue</p>
+                      <p className="text-sm">{companyInfo.revenue}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Founded</p>
+                      <p className="text-sm">{companyInfo.founded}</p>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
+                    <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
+                  </div>
+
+                  <div className="pt-2 space-y-2">
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Globe className="h-3 w-3" />
+                      Visit Website
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleViewProspect}>
+                      <Eye className="h-3 w-3" />
+                      Open Prospect
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               <Card>
                 <CardHeader>
@@ -488,57 +529,21 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
               </Card>
             </div>
 
-            {/* Company Info Sidebar */}
+            {/* AI Analysis Rating Sidebar */}
             <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    Company Overview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Industry</p>
-                      <p className="text-sm">{companyInfo.industry}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Company Size</p>
-                      <p className="text-sm flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        {companyInfo.size}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Revenue</p>
-                      <p className="text-sm">{companyInfo.revenue}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Founded</p>
-                      <p className="text-sm">{companyInfo.founded}</p>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
-                    <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
-                  </div>
-
-                  <div className="pt-2 space-y-2">
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <Globe className="h-3 w-3" />
-                      Visit Website
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleViewProspect}>
-                      <Eye className="h-3 w-3" />
-                      Open Prospect
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              {(job.ai_reasoning && job.ai_match !== 'not_analyzed') && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="h-5 w-5" />
+                      Rate this analysis
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <AIAnalysisRating />
+                  </CardContent>
+                </Card>
+              )}
 
             </div>
           </div>
