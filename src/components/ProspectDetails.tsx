@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Globe, Linkedin, ExternalLink, MapPin, Calendar, Users, Building, DollarSign, FileText, MessageCircle, Star, Copy, Phone, Mail, AlertTriangle } from 'lucide-react';
+import { X, Globe, Linkedin, ExternalLink, MapPin, Calendar, Users, Building, DollarSign, FileText, MessageCircle, Star, Copy, Phone, Mail, AlertTriangle, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,18 +9,118 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface ProspectDetailsProps {
   prospect: any;
   onClose: () => void;
 }
 
+// Prospect Rating Component
+const ProspectRating: React.FC = () => {
+  const [selectedRating, setSelectedRating] = useState<'positive' | 'negative' | null>(null);
+  const [comment, setComment] = useState('');
+  const [showComment, setShowComment] = useState(false);
+
+  const handleRatingClick = (rating: 'positive' | 'negative') => {
+    setSelectedRating(rating);
+    setShowComment(rating === 'negative');
+    
+    if (rating === 'positive') {
+      setComment('');
+      // Submit positive feedback immediately
+      toast.success("Thanks for your feedback! This helps improve future prospect evaluation.");
+    }
+  };
+
+  const handleSubmitComment = () => {
+    if (!comment.trim()) {
+      toast.error("Please explain what was wrong with this prospect");
+      return;
+    }
+    // Submit negative feedback with comment
+    toast.success("Thanks for your detailed feedback! This helps improve our prospect evaluation.");
+    setSelectedRating(null);
+    setComment('');
+    setShowComment(false);
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">
+          Rate this prospect to help improve future searches
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => handleRatingClick('positive')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
+              selectedRating === 'positive'
+                ? 'border-emerald-300 bg-emerald-50 text-emerald-700' 
+                : 'border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/30'
+            }`}
+          >
+            <ThumbsUp className="h-4 w-4" />
+            <span className="text-sm font-medium">Good</span>
+          </button>
+          
+          <button
+            onClick={() => handleRatingClick('negative')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
+              selectedRating === 'negative'
+                ? 'border-rose-300 bg-rose-50 text-rose-700' 
+                : 'border-gray-200 hover:border-rose-200 hover:bg-rose-50/30'
+            }`}
+          >
+            <ThumbsDown className="h-4 w-4" />
+            <span className="text-sm font-medium">Poor</span>
+          </button>
+        </div>
+      </div>
+      
+      {showComment && (
+        <div className="space-y-3 p-4 bg-rose-50 border border-rose-200 rounded-lg">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-rose-600" />
+            <span className="text-sm font-medium text-rose-700">
+              Help us improve - what went wrong?
+            </span>
+          </div>
+          <Textarea
+            placeholder="Please describe what was inaccurate about this prospect..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="min-h-[80px] resize-none border-rose-200 focus:border-rose-400"
+          />
+          <div className="flex gap-2">
+            <Button size="sm" onClick={handleSubmitComment} className="gap-1">
+              <MessageCircle className="h-3 w-3" />
+              Submit Feedback
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => {
+                setShowComment(false);
+                setSelectedRating(null);
+                setComment('');
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) => {
   const [newComment, setNewComment] = useState('');
   const [commentType, setCommentType] = useState('comment');
   const [actionDialog, setActionDialog] = useState<{ open: boolean; type: string; title: string } | null>(null);
   const [actionComment, setActionComment] = useState('');
-  const { toast } = useToast();
+  const { toast: useToastHook } = useToast();
 
   const jobs = [
     {
@@ -101,7 +201,7 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
   const handleActionSubmit = () => {
     if (actionDialog && actionComment.trim()) {
       // Save the action comment
-      toast({
+      useToastHook({
         title: "Action completed",
         description: `${actionDialog.type} action completed with comment.`,
       });
@@ -341,6 +441,16 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                       </div>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Prospect Rating */}
+              <Card className="border-0 shadow-sm">
+                <CardHeader>
+                  <CardTitle>Rate This Prospect</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ProspectRating />
                 </CardContent>
               </Card>
             </div>
