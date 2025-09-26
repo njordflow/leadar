@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, MapPin, Building2, DollarSign, Calendar, Eye, Briefcase, Users, Globe, Star, MessageSquare, Brain, CheckCircle2 } from 'lucide-react';
+import { ExternalLink, MapPin, Building2, DollarSign, Calendar, Eye, Briefcase, Users, Globe, Star, MessageSquare, Brain, CheckCircle2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -44,27 +44,18 @@ interface JobDetailsProps {
 
 // AI Analysis Rating Component
 const AIAnalysisRating: React.FC = () => {
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [selectedRating, setSelectedRating] = useState<'positive' | 'negative' | null>(null);
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
 
-  const ratingLabels = {
-    1: 'Very poor',
-    2: 'Poor', 
-    3: 'Average',
-    4: 'Good',
-    5: 'Excellent'
-  };
-
-  const handleRatingClick = (rating: number) => {
+  const handleRatingClick = (rating: 'positive' | 'negative') => {
     setSelectedRating(rating);
-    setShowComment(rating <= 3);
+    setShowComment(rating === 'negative');
     
-    if (rating >= 4) {
+    if (rating === 'positive') {
       setComment('');
       // Submit positive feedback immediately
-      const label = ratingLabels[rating as keyof typeof ratingLabels];
-      toast.success(`Thanks for rating this analysis as ${label.toLowerCase()}!`);
+      toast.success("Thanks for your feedback! This helps improve future job searches.");
     }
   };
 
@@ -74,7 +65,7 @@ const AIAnalysisRating: React.FC = () => {
       return;
     }
     // Submit negative feedback with comment
-    toast.success("Thanks for your detailed feedback! This helps improve our AI.");
+    toast.success("Thanks for your detailed feedback! This helps improve our AI and future job searches.");
     setSelectedRating(null);
     setComment('');
     setShowComment(false);
@@ -82,43 +73,42 @@ const AIAnalysisRating: React.FC = () => {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">
+          Rate this analysis to help improve future job searches
+        </p>
+        <div className="flex items-center gap-3">
           <button
-            key={star}
-            onClick={() => handleRatingClick(star)}
-            className={`p-2 rounded-lg hover:scale-110 transition-all group border-2 ${
-              selectedRating && star <= selectedRating
-                ? 'border-yellow-300 bg-yellow-50/50' 
-                : 'border-transparent hover:border-yellow-200 hover:bg-yellow-50/30'
+            onClick={() => handleRatingClick('positive')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
+              selectedRating === 'positive'
+                ? 'border-emerald-300 bg-emerald-50 text-emerald-700' 
+                : 'border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/30'
             }`}
           >
-            <Star 
-              className={`h-5 w-5 transition-colors ${
-                selectedRating && star <= selectedRating
-                  ? 'fill-yellow-400 text-yellow-500' 
-                  : 'text-gray-300 group-hover:text-yellow-400'
-              }`}
-            />
+            <ThumbsUp className="h-4 w-4" />
+            <span className="text-sm font-medium">Good</span>
           </button>
-        ))}
-        {selectedRating && (
-          <div className="ml-3 flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">
-              {selectedRating}/5
-            </span>
-            <span className="text-sm font-medium text-foreground">
-              {ratingLabels[selectedRating as keyof typeof ratingLabels]}
-            </span>
-          </div>
-        )}
+          
+          <button
+            onClick={() => handleRatingClick('negative')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
+              selectedRating === 'negative'
+                ? 'border-rose-300 bg-rose-50 text-rose-700' 
+                : 'border-gray-200 hover:border-rose-200 hover:bg-rose-50/30'
+            }`}
+          >
+            <ThumbsDown className="h-4 w-4" />
+            <span className="text-sm font-medium">Poor</span>
+          </button>
+        </div>
       </div>
       
       {showComment && (
-        <div className="space-y-3 p-4 bg-destructive/5 border border-destructive/20 rounded-lg">
+        <div className="space-y-3 p-4 bg-rose-50 border border-rose-200 rounded-lg">
           <div className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">
+            <MessageSquare className="h-4 w-4 text-rose-600" />
+            <span className="text-sm font-medium text-rose-700">
               Help us improve - what went wrong?
             </span>
           </div>
@@ -126,7 +116,7 @@ const AIAnalysisRating: React.FC = () => {
             placeholder="Please describe what was inaccurate or misleading in the AI analysis..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="min-h-[80px] resize-none border-destructive/20 focus:border-destructive"
+            className="min-h-[80px] resize-none border-rose-200 focus:border-rose-400"
           />
           <div className="flex gap-2">
             <Button size="sm" onClick={handleSubmitComment} className="gap-1">
