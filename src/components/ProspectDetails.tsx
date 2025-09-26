@@ -18,98 +18,178 @@ interface ProspectDetailsProps {
 
 // Prospect Rating Component
 const ProspectRating: React.FC = () => {
-  const [selectedRating, setSelectedRating] = useState<'positive' | 'negative' | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
+  const [showThanks, setShowThanks] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const handleRatingClick = (rating: 'positive' | 'negative') => {
+  const quickTags = [
+    { id: 'skills', label: 'Perfect skills match', icon: '🎯' },
+    { id: 'experience', label: 'Right experience level', icon: '📈' },
+    { id: 'location', label: 'Good location', icon: '📍' },
+    { id: 'salary', label: 'Salary expectations fit', icon: '💰' },
+    { id: 'irrelevant', label: 'Completely irrelevant', icon: '❌' },
+    { id: 'overqualified', label: 'Too senior/expensive', icon: '⬆️' },
+    { id: 'underqualified', label: 'Lacks required skills', icon: '⬇️' },
+    { id: 'wrong-location', label: 'Wrong location', icon: '🚫' }
+  ];
+
+  const handleStarClick = (rating: number) => {
     setSelectedRating(rating);
-    setShowComment(rating === 'negative');
+    setShowComment(rating <= 2);
+    setShowThanks(false);
     
-    if (rating === 'positive') {
-      setComment('');
-      // Submit positive feedback immediately
-      toast.success("Thanks for your feedback! This helps improve future prospect evaluation.");
+    if (rating >= 4) {
+      // Positive rating - show thanks immediately
+      setTimeout(() => {
+        setShowThanks(true);
+        toast.success("Thanks! Your feedback helps improve matching accuracy.");
+      }, 300);
     }
   };
 
-  const handleSubmitComment = () => {
-    if (!comment.trim()) {
-      toast.error("Please explain what was wrong with this prospect");
-      return;
+  const handleTagClick = (tagId: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tagId) 
+        ? prev.filter(id => id !== tagId)
+        : [...prev, tagId]
+    );
+  };
+
+  const handleSubmitFeedback = () => {
+    if (selectedRating && selectedRating <= 2) {
+      if (selectedTags.length === 0 && !comment.trim()) {
+        toast.error("Please select tags or add a comment to help us improve");
+        return;
+      }
     }
-    // Submit negative feedback with comment
-    toast.success("Thanks for your detailed feedback! This helps improve our prospect evaluation.");
-    setSelectedRating(null);
-    setComment('');
-    setShowComment(false);
+    
+    setShowThanks(true);
+    toast.success("Thank you! Your detailed feedback helps improve our AI matching.");
+    
+    // Reset after showing thanks
+    setTimeout(() => {
+      setSelectedRating(null);
+      setComment('');
+      setShowComment(false);
+      setShowThanks(false);
+      setSelectedTags([]);
+    }, 2000);
   };
 
   return (
-    <div className="space-y-3">
-      <div className="space-y-2">
-        <p className="text-xs text-muted-foreground">
-          Rate this prospect to help improve future searches
-        </p>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => handleRatingClick('positive')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
-              selectedRating === 'positive'
-                ? 'border-emerald-300 bg-emerald-50 text-emerald-700' 
-                : 'border-gray-200 hover:border-emerald-200 hover:bg-emerald-50/30'
-            }`}
-          >
-            <ThumbsUp className="h-4 w-4" />
-            <span className="text-sm font-medium">Good</span>
-          </button>
-          
-          <button
-            onClick={() => handleRatingClick('negative')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all hover:scale-105 ${
-              selectedRating === 'negative'
-                ? 'border-rose-300 bg-rose-50 text-rose-700' 
-                : 'border-gray-200 hover:border-rose-200 hover:bg-rose-50/30'
-            }`}
-          >
-            <ThumbsDown className="h-4 w-4" />
-            <span className="text-sm font-medium">Poor</span>
-          </button>
+    <div className="space-y-4 animate-fade-in">
+      {showThanks ? (
+        <div className="text-center space-y-3 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 animate-scale-in">
+          <div className="text-2xl">✨</div>
+          <p className="text-sm font-medium text-green-700">
+            Thank you for your feedback!
+          </p>
+          <p className="text-xs text-green-600">
+            This helps us improve matching for your team
+          </p>
         </div>
-      </div>
-      
-      {showComment && (
-        <div className="space-y-3 p-4 bg-rose-50 border border-rose-200 rounded-lg">
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4 text-rose-600" />
-            <span className="text-sm font-medium text-rose-700">
-              Help us improve - what went wrong?
-            </span>
+      ) : (
+        <>
+          {/* Star Rating */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => handleStarClick(star)}
+                  className={`p-1 rounded-full transition-all duration-200 hover:scale-110 ${
+                    selectedRating && star <= selectedRating
+                      ? 'text-yellow-400 hover:text-yellow-500'
+                      : 'text-gray-300 hover:text-yellow-300'
+                  }`}
+                >
+                  <Star 
+                    className={`h-6 w-6 transition-all duration-200 ${
+                      selectedRating && star <= selectedRating 
+                        ? 'fill-current' 
+                        : ''
+                    }`} 
+                  />
+                </button>
+              ))}
+            </div>
+            
+            {selectedRating && (
+              <div className="text-center animate-fade-in">
+                <p className="text-xs text-muted-foreground">
+                  {selectedRating >= 4 ? 'Great match!' : 
+                   selectedRating === 3 ? 'Decent match' : 
+                   'Needs improvement'}
+                </p>
+              </div>
+            )}
           </div>
-          <Textarea
-            placeholder="Please describe what was inaccurate about this prospect..."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="min-h-[80px] resize-none border-rose-200 focus:border-rose-400"
-          />
-          <div className="flex gap-2">
-            <Button size="sm" onClick={handleSubmitComment} className="gap-1">
+
+          {/* Quick Tags for detailed feedback */}
+          {selectedRating && (
+            <div className="space-y-3 animate-fade-in">
+              <p className="text-xs font-medium text-muted-foreground">
+                What makes this rating? (optional)
+              </p>
+              <div className="grid grid-cols-1 gap-2">
+                {quickTags
+                  .filter(tag => selectedRating >= 4 ? 
+                    ['skills', 'experience', 'location', 'salary'].includes(tag.id) :
+                    ['irrelevant', 'overqualified', 'underqualified', 'wrong-location'].includes(tag.id)
+                  )
+                  .map((tag) => (
+                    <button
+                      key={tag.id}
+                      onClick={() => handleTagClick(tag.id)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs transition-all hover:scale-[1.02] ${
+                        selectedTags.includes(tag.id)
+                          ? selectedRating >= 4
+                            ? 'border-green-300 bg-green-50 text-green-700'
+                            : 'border-orange-300 bg-orange-50 text-orange-700'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <span>{tag.icon}</span>
+                      <span>{tag.label}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Comment for low ratings */}
+          {showComment && (
+            <div className="space-y-3 p-4 bg-orange-50 border border-orange-200 rounded-lg animate-fade-in">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4 text-orange-600" />
+                <span className="text-sm font-medium text-orange-700">
+                  Help us improve - any additional details?
+                </span>
+              </div>
+              <Textarea
+                placeholder="Optional: describe what could be better about this match..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="min-h-[60px] resize-none border-orange-200 focus:border-orange-400 text-sm"
+              />
+            </div>
+          )}
+
+          {/* Submit button for ratings that need feedback */}
+          {selectedRating && selectedRating <= 3 && (
+            <Button 
+              size="sm" 
+              onClick={handleSubmitFeedback}
+              className="w-full gap-2 animate-fade-in"
+              disabled={selectedRating <= 2 && selectedTags.length === 0 && !comment.trim()}
+            >
               <MessageCircle className="h-3 w-3" />
               Submit Feedback
             </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              onClick={() => {
-                setShowComment(false);
-                setSelectedRating(null);
-                setComment('');
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </div>
   );
