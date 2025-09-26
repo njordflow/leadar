@@ -444,23 +444,30 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
                 </CardContent>
               </Card>
 
+            </div>
+
+            {/* Right Column - Rating & Quick Actions */}
+            <div className="space-y-6">
               {/* Prospect Rating */}
               <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle>Rate This Prospect</CardTitle>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <ThumbsUp className="h-4 w-4 text-primary" />
+                    Help Improve AI Model
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ProspectRating />
                 </CardContent>
               </Card>
-            </div>
 
-            {/* Right Column - Quick Actions & Location */}
-            <div className="space-y-6">
               {/* Quick Actions */}
               <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="h-5 w-5 text-primary" />
+                    Quick Actions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button className="w-full gap-2 bg-gradient-primary hover:shadow-glow">
