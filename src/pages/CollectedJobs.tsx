@@ -354,17 +354,17 @@ const CollectedJobs = () => {
                         'Not Analyzed'
                       }>
                         {job.ai_match === 'qualified' && (
-                          <Badge className="bg-success text-success-foreground border-success/20">
+                          <Badge variant="outline" className="text-xs bg-success-light text-success border-success/20">
                             Qualified
                           </Badge>
                         )}
                         {job.ai_match === 'not_a_match' && (
-                          <Badge variant="destructive" className="bg-destructive text-destructive-foreground">
+                          <Badge variant="outline" className="text-xs bg-destructive-light text-destructive border-destructive/20">
                             Not a Match
                           </Badge>
                         )}
                         {job.ai_match === 'not_analyzed' && (
-                          <Badge variant="secondary" className="bg-muted text-muted-foreground">
+                          <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-muted-foreground/20">
                             Not Analyzed
                           </Badge>
                         )}
