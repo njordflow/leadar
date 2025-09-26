@@ -449,12 +449,15 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
             {/* Right Column - Rating & Quick Actions */}
             <div className="space-y-6">
               {/* Prospect Rating */}
-              <Card className="border-0 shadow-sm">
+              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <ThumbsUp className="h-4 w-4 text-primary" />
+                  <CardTitle className="flex items-center gap-2 text-primary">
+                    <ThumbsUp className="h-4 w-4" />
                     Help Improve AI Model
                   </CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    Your feedback helps us improve prospect matching and AI recommendations.
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <ProspectRating />
