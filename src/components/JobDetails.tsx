@@ -42,6 +42,89 @@ interface JobDetailsProps {
   onOpenProspect?: (companyName: string) => void;
 }
 
+// AI Analysis Rating Component
+const AIAnalysisRating: React.FC = () => {
+  const [selectedRating, setSelectedRating] = useState<string | null>(null);
+  const [comment, setComment] = useState('');
+  const [showComment, setShowComment] = useState(false);
+
+  const handleRatingClick = (rating: string) => {
+    setSelectedRating(rating);
+    setShowComment(rating === '😞' || rating === '😐');
+    if (rating === '😊') {
+      setComment('');
+      // Submit positive feedback immediately
+      toast.success("Thanks for your feedback!");
+    }
+  };
+
+  const handleSubmitComment = () => {
+    if (!comment.trim()) {
+      toast.error("Please explain why the analysis was poor");
+      return;
+    }
+    // Submit negative feedback with comment
+    toast.success("Thanks for your feedback! This helps improve our AI.");
+    setSelectedRating(null);
+    setComment('');
+    setShowComment(false);
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        {[
+          { emoji: '😞', label: 'Poor' },
+          { emoji: '😐', label: 'Okay' },
+          { emoji: '😊', label: 'Good' }
+        ].map(({ emoji, label }) => (
+          <button
+            key={emoji}
+            onClick={() => handleRatingClick(emoji)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-all hover:bg-muted/50 ${
+              selectedRating === emoji ? 'bg-muted border-primary' : 'border-muted'
+            }`}
+          >
+            <span className="text-2xl">{emoji}</span>
+            <span className="text-xs text-muted-foreground">{label}</span>
+          </button>
+        ))}
+      </div>
+      
+      {showComment && (
+        <div className="space-y-2 p-3 bg-muted/30 rounded-lg border">
+          <Label htmlFor="ai-feedback" className="text-sm font-medium">
+            Please tell us why the AI analysis was poor:
+          </Label>
+          <Textarea
+            id="ai-feedback"
+            placeholder="Explain what was wrong with the analysis..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="min-h-[60px] resize-none"
+          />
+          <div className="flex gap-2">
+            <Button size="sm" onClick={handleSubmitComment}>
+              Submit
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => {
+                setShowComment(false);
+                setSelectedRating(null);
+                setComment('');
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpenProspect }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
@@ -291,11 +374,21 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                 </div>
                 
                 {job.ai_reasoning && job.ai_match !== 'not_analyzed' && (
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium">Reasoning:</span>
-                    <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
-                      {job.ai_reasoning}
-                    </p>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <span className="text-sm font-medium">Reasoning:</span>
+                      <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                        {job.ai_reasoning}
+                      </p>
+                    </div>
+                    
+                    {/* AI Analysis Rating */}
+                    <div className="border-t pt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium">Rate this analysis:</span>
+                      </div>
+                      <AIAnalysisRating />
+                    </div>
                   </div>
                 )}
                 
