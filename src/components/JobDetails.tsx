@@ -345,66 +345,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Job Info */}
             <div className="lg:col-span-2 space-y-6">
-              {/* AI Analysis */}
-              <div className={`p-6 rounded-lg border-2 ${
-                job.ai_match === 'qualified' ? 'border-success/30 bg-success/5' :
-                job.ai_match === 'not_a_match' ? 'border-destructive/30 bg-destructive/5' :
-                'border-muted bg-muted/10'
-              }`}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <Brain className="h-5 w-5" />
-                    <span className="font-semibold">AI Analysis</span>
-                    <div className="flex items-center gap-2">
-                      {job.ai_match === 'qualified' && (
-                        <>
-                          <span className="text-2xl">✅</span>
-                          <Badge variant="default" className="bg-success text-white border-success">
-                            Qualified
-                          </Badge>
-                        </>
-                      )}
-                      {job.ai_match === 'not_a_match' && (
-                        <>
-                          <span className="text-2xl">❌</span>
-                          <Badge variant="destructive" className="bg-destructive text-white border-destructive">
-                            Not a Match
-                          </Badge>
-                        </>
-                      )}
-                      {job.ai_match === 'not_analyzed' && (
-                        <>
-                          <span className="text-2xl">⏳</span>
-                          <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/20">
-                            Not Analyzed
-                          </Badge>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  {job.ai_updated_at && (
-                    <span className="text-xs text-muted-foreground">
-                      Updated {new Date(job.ai_updated_at).toLocaleDateString()}
-                    </span>
-                  )}
-                </div>
-                
-                {job.ai_reasoning && job.ai_match !== 'not_analyzed' && (
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium">Reasoning:</span>
-                    <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
-                      {job.ai_reasoning}
-                    </p>
-                  </div>
-                )}
-                
-                {job.ai_match === 'not_analyzed' && (
-                  <p className="text-sm text-muted-foreground italic">
-                    This job hasn't been analyzed by our AI yet.
-                  </p>
-                )}
-              </div>
-
               {/* Company Overview */}
               <Card>
                 <CardHeader>
@@ -529,22 +469,77 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
               </Card>
             </div>
 
-            {/* AI Analysis Rating Sidebar */}
+            {/* AI Analysis Sidebar */}
             <div className="space-y-6">
-              {(job.ai_reasoning && job.ai_match !== 'not_analyzed') && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brain className="h-5 w-5" />
-                      Rate this analysis
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <AIAnalysisRating />
-                  </CardContent>
-                </Card>
-              )}
+              <Card className={`${
+                job.ai_match === 'qualified' ? 'border-success/30 bg-success/5' :
+                job.ai_match === 'not_a_match' ? 'border-destructive/30 bg-destructive/5' :
+                'border-muted bg-muted/10'
+              }`}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Brain className="h-5 w-5" />
+                    AI Analysis
+                    <div className="flex items-center gap-2 ml-auto">
+                      {job.ai_match === 'qualified' && (
+                        <>
+                          <span className="text-2xl">✅</span>
+                          <Badge variant="default" className="bg-success text-white border-success">
+                            Qualified
+                          </Badge>
+                        </>
+                      )}
+                      {job.ai_match === 'not_a_match' && (
+                        <>
+                          <span className="text-2xl">❌</span>
+                          <Badge variant="destructive" className="bg-destructive text-white border-destructive">
+                            Not a Match
+                          </Badge>
+                        </>
+                      )}
+                      {job.ai_match === 'not_analyzed' && (
+                        <>
+                          <span className="text-2xl">⏳</span>
+                          <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/20">
+                            Not Analyzed
+                          </Badge>
+                        </>
+                      )}
+                    </div>
+                  </CardTitle>
+                  {job.ai_updated_at && (
+                    <p className="text-xs text-muted-foreground">
+                      Updated {new Date(job.ai_updated_at).toLocaleDateString()}
+                    </p>
+                  )}
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {job.ai_reasoning && job.ai_match !== 'not_analyzed' && (
+                    <div className="space-y-2">
+                      <span className="text-sm font-medium">Reasoning:</span>
+                      <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                        {job.ai_reasoning}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {job.ai_match === 'not_analyzed' && (
+                    <p className="text-sm text-muted-foreground italic">
+                      This job hasn't been analyzed by our AI yet.
+                    </p>
+                  )}
 
+                  {(job.ai_reasoning && job.ai_match !== 'not_analyzed') && (
+                    <>
+                      <Separator />
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Rate this analysis</h4>
+                        <AIAnalysisRating />
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
