@@ -451,11 +451,11 @@ const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, onClose }) 
               {/* Prospect Rating */}
               <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm font-medium">
-                    <ThumbsUp className="h-4 w-4 text-primary" />
+                  <CardTitle className="flex items-center gap-2">
+                    <ThumbsUp className="h-4 w-4" />
                     Rate this prospect
                   </CardTitle>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Your feedback improves future search results and matching accuracy for your team.
                   </p>
                 </CardHeader>
