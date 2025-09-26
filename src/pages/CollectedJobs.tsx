@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink, Star } from 'lucide-react';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink, Star, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -354,13 +354,13 @@ const CollectedJobs = () => {
                         'Not Analyzed'
                       }>
                         {job.ai_match === 'qualified' && (
-                          <span className="text-2xl">✅</span>
+                          <CheckCircle className="h-6 w-6 text-success fill-success/20" />
                         )}
                         {job.ai_match === 'not_a_match' && (
-                          <span className="text-2xl">❌</span>
+                          <XCircle className="h-6 w-6 text-destructive fill-destructive/20" />
                         )}
                         {job.ai_match === 'not_analyzed' && (
-                          <span className="text-2xl">⏳</span>
+                          <Clock className="h-6 w-6 text-muted-foreground fill-muted/20" />
                         )}
                       </div>
                     </td>
