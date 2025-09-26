@@ -44,27 +44,37 @@ interface JobDetailsProps {
 
 // AI Analysis Rating Component
 const AIAnalysisRating: React.FC = () => {
-  const [selectedRating, setSelectedRating] = useState<string | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
   const [showComment, setShowComment] = useState(false);
 
-  const handleRatingClick = (rating: string) => {
+  const ratingLabels = {
+    1: 'Very poor',
+    2: 'Poor', 
+    3: 'Average',
+    4: 'Good',
+    5: 'Excellent'
+  };
+
+  const handleRatingClick = (rating: number) => {
     setSelectedRating(rating);
-    setShowComment(rating === '😞' || rating === '😐');
-    if (rating === '😊') {
+    setShowComment(rating <= 2);
+    
+    if (rating >= 3) {
       setComment('');
       // Submit positive feedback immediately
-      toast.success("Thanks for your feedback!");
+      const label = ratingLabels[rating as keyof typeof ratingLabels];
+      toast.success(`Thanks for rating this analysis as ${label.toLowerCase()}!`);
     }
   };
 
   const handleSubmitComment = () => {
     if (!comment.trim()) {
-      toast.error("Please explain why the analysis was poor");
+      toast.error("Please explain what was wrong with the analysis");
       return;
     }
     // Submit negative feedback with comment
-    toast.success("Thanks for your feedback! This helps improve our AI.");
+    toast.success("Thanks for your detailed feedback! This helps improve our AI.");
     setSelectedRating(null);
     setComment('');
     setShowComment(false);
@@ -72,40 +82,48 @@ const AIAnalysisRating: React.FC = () => {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        {[
-          { emoji: '😞', label: 'Poor' },
-          { emoji: '😐', label: 'Okay' },
-          { emoji: '😊', label: 'Good' }
-        ].map(({ emoji, label }) => (
-          <button
-            key={emoji}
-            onClick={() => handleRatingClick(emoji)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg border transition-all hover:bg-muted/50 ${
-              selectedRating === emoji ? 'bg-muted border-primary' : 'border-muted'
-            }`}
-          >
-            <span className="text-2xl">{emoji}</span>
-            <span className="text-xs text-muted-foreground">{label}</span>
-          </button>
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <div key={star} className="flex flex-col items-center">
+            <button
+              onClick={() => handleRatingClick(star)}
+              className="p-1 hover:scale-110 transition-transform group"
+            >
+              <Star 
+                className={`h-5 w-5 transition-colors ${
+                  selectedRating && star <= selectedRating
+                    ? 'fill-yellow-400 text-yellow-400' 
+                    : 'text-gray-300 hover:text-yellow-300'
+                }`}
+              />
+            </button>
+          </div>
         ))}
+        {selectedRating && (
+          <span className="ml-2 text-sm font-medium text-muted-foreground">
+            {ratingLabels[selectedRating as keyof typeof ratingLabels]}
+          </span>
+        )}
       </div>
       
       {showComment && (
-        <div className="space-y-2 p-3 bg-muted/30 rounded-lg border">
-          <Label htmlFor="ai-feedback" className="text-sm font-medium">
-            Please tell us why the AI analysis was poor:
-          </Label>
+        <div className="space-y-3 p-4 bg-destructive/5 border border-destructive/20 rounded-lg">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4 text-destructive" />
+            <span className="text-sm font-medium text-destructive">
+              Help us improve - what went wrong?
+            </span>
+          </div>
           <Textarea
-            id="ai-feedback"
-            placeholder="Explain what was wrong with the analysis..."
+            placeholder="Please describe what was inaccurate or misleading in the AI analysis..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="min-h-[60px] resize-none"
+            className="min-h-[80px] resize-none border-destructive/20 focus:border-destructive"
           />
           <div className="flex gap-2">
-            <Button size="sm" onClick={handleSubmitComment}>
-              Submit
+            <Button size="sm" onClick={handleSubmitComment} className="gap-1">
+              <MessageSquare className="h-3 w-3" />
+              Submit Feedback
             </Button>
             <Button 
               size="sm" 
