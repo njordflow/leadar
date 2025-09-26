@@ -276,7 +276,7 @@ const CollectedJobs = () => {
                   <th className="text-left p-4 font-medium text-muted-foreground">Salary</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Posted</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Type</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">AI Match</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">AI Fit</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
@@ -347,26 +347,34 @@ const CollectedJobs = () => {
                         {job.type}
                       </Badge>
                     </td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-center" title={
-                        job.ai_match === 'qualified' ? `Qualified${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}` :
-                        job.ai_match === 'not_a_match' ? `Not a Match${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}` :
-                        'Not Analyzed'
-                      }>
+                     <td className="p-4">
+                      <div className="flex items-center justify-center">
                         {job.ai_match === 'qualified' && (
-                          <Badge variant="outline" className="text-xs bg-success-light text-success border-success/20">
-                            Qualified
-                          </Badge>
+                          <span
+                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                            title={`AI Fit: Yes${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}`}
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            Yes
+                          </span>
                         )}
                         {job.ai_match === 'not_a_match' && (
-                          <Badge variant="outline" className="text-xs bg-destructive-light text-destructive border-destructive/20">
-                            Not a Match
-                          </Badge>
+                          <span
+                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-rose-50 text-rose-700 ring-1 ring-rose-200"
+                            title={`AI Fit: No${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}`}
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                            No
+                          </span>
                         )}
                         {job.ai_match === 'not_analyzed' && (
-                          <Badge variant="outline" className="text-xs bg-muted text-muted-foreground border-muted-foreground/20">
-                            Not Analyzed
-                          </Badge>
+                          <span
+                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-slate-50 text-slate-600 ring-1 ring-slate-200"
+                            title="AI Fit: Pending"
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                            Pending
+                          </span>
                         )}
                       </div>
                     </td>
