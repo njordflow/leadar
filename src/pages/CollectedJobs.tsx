@@ -348,26 +348,19 @@ const CollectedJobs = () => {
                       </Badge>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center" title={
+                        job.ai_match === 'qualified' ? `Qualified${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}` :
+                        job.ai_match === 'not_a_match' ? `Not a Match${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}` :
+                        'Not Analyzed'
+                      }>
                         {job.ai_match === 'qualified' && (
-                          <Badge variant="default" className="bg-success text-white border-success">
-                            Qualified
-                          </Badge>
+                          <span className="text-2xl">✅</span>
                         )}
                         {job.ai_match === 'not_a_match' && (
-                          <Badge variant="destructive" className="bg-destructive text-white border-destructive">
-                            Not a Match
-                          </Badge>
+                          <span className="text-2xl">❌</span>
                         )}
                         {job.ai_match === 'not_analyzed' && (
-                          <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/20">
-                            Not Analyzed
-                          </Badge>
-                        )}
-                        {job.ai_updated_at && (
-                          <span className="text-xs text-muted-foreground">
-                            Updated {new Date(job.ai_updated_at).toLocaleDateString()}
-                          </span>
+                          <span className="text-2xl">⏳</span>
                         )}
                       </div>
                     </td>
