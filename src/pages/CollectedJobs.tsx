@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink, Star, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink, Star, CheckCircle, XCircle, Clock, Check, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -351,7 +351,7 @@ const CollectedJobs = () => {
                       <div className="flex items-center justify-center">
                         {job.ai_match === 'qualified' && (
                           <span
-                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                            className="inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 min-w-[60px]"
                             title={`AI Fit: Yes${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}`}
                           >
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -360,7 +360,7 @@ const CollectedJobs = () => {
                         )}
                         {job.ai_match === 'not_a_match' && (
                           <span
-                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-rose-50 text-rose-700 ring-1 ring-rose-200"
+                            className="inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap bg-rose-50 text-rose-700 ring-1 ring-rose-200 min-w-[60px]"
                             title={`AI Fit: No${job.ai_updated_at ? ` • Updated ${new Date(job.ai_updated_at).toLocaleDateString()}` : ''}`}
                           >
                             <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
@@ -369,11 +369,10 @@ const CollectedJobs = () => {
                         )}
                         {job.ai_match === 'not_analyzed' && (
                           <span
-                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-slate-50 text-slate-600 ring-1 ring-slate-200"
+                            className="inline-flex items-center justify-center text-slate-500"
                             title="AI Fit: Pending"
                           >
-                            <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                            Pending
+                            <Clock className="h-3.5 w-3.5" />
                           </span>
                         )}
                       </div>
