@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink } from 'lucide-react';
+import { Search, Filter, Download, Calendar, Briefcase, TrendingUp, Copy, Globe, Building, ExternalLink, Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,6 +45,8 @@ const CollectedJobs = () => {
       website: 'carbonrobotics.com',
       source: 'indeed',
       url: 'https://indeed.com/job/senior-software-engineer-123',
+      aiRating: 4.5,
+      aiFeedback: { totalRatings: 12, lastRated: '1 day ago' }
     },
     {
       id: 2,
@@ -60,6 +62,8 @@ const CollectedJobs = () => {
       website: 'stpaulgroup.com',
       source: 'linkedin',
       url: 'https://linkedin.com/jobs/marketing-manager-456',
+      aiRating: 3.2,
+      aiFeedback: { totalRatings: 8, lastRated: '3 hours ago' }
     },
     {
       id: 3,
@@ -75,6 +79,8 @@ const CollectedJobs = () => {
       website: 'electronic-logistics.nl',
       source: 'indeed',
       url: 'https://indeed.com/job/devops-engineer-789',
+      aiRating: null,
+      aiFeedback: null
     },
     {
       id: 4,
@@ -90,6 +96,8 @@ const CollectedJobs = () => {
       website: 'schmidt-relocation.com',
       source: 'linkedin',
       url: 'https://linkedin.com/jobs/data-analyst-101',
+      aiRating: 4.8,
+      aiFeedback: { totalRatings: 5, lastRated: '2 hours ago' }
     }
   ];
 
@@ -256,6 +264,7 @@ const CollectedJobs = () => {
                   <th className="text-left p-4 font-medium text-muted-foreground">Salary</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Posted</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Type</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">AI Rating</th>
                   <th className="text-left p-4 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
@@ -299,6 +308,12 @@ const CollectedJobs = () => {
                           <p className="font-medium">{job.title}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-sm text-muted-foreground">{job.company}</span>
+                            {job.aiRating && (
+                              <div className="flex items-center gap-1">
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <span className="text-xs font-medium text-yellow-600">{job.aiRating.toFixed(1)}</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -319,6 +334,19 @@ const CollectedJobs = () => {
                       <Badge variant="outline" className="bg-secondary-light text-secondary border-secondary/20">
                         {job.type}
                       </Badge>
+                    </td>
+                    <td className="p-4">
+                      {job.aiRating ? (
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            <span className="font-medium text-sm">{job.aiRating.toFixed(1)}</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">({job.aiFeedback?.totalRatings})</span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Not rated</span>
+                      )}
                     </td>
                     <td className="p-4">
                       <Button 

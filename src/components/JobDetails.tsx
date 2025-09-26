@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, MapPin, Building2, DollarSign, Calendar, Eye, Briefcase, Users, Globe, Star, MessageSquare, Brain } from 'lucide-react';
+import { ExternalLink, MapPin, Building2, DollarSign, Calendar, Eye, Briefcase, Users, Globe, Star, MessageSquare, Brain, CheckCircle2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,6 +25,11 @@ interface Job {
   description?: string;
   url?: string;
   source?: 'indeed' | 'linkedin';
+  aiRating?: number | null;
+  aiFeedback?: {
+    totalRatings: number;
+    lastRated: string;
+  } | null;
 }
 
 interface JobDetailsProps {
@@ -38,6 +43,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
   const [showFeedback, setShowFeedback] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   
   if (!job) return null;
 
@@ -52,6 +58,25 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
     setShowFeedback(false);
     setRating(0);
     setComment('');
+    setSelectedCategories([]);
+  };
+
+  const feedbackCategories = [
+    "Job description accuracy",
+    "Salary range estimation", 
+    "Company information",
+    "Required skills matching",
+    "Location details",
+    "Remote work options",
+    "Job level classification"
+  ];
+
+  const toggleCategory = (category: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
   };
 
   const handleOpenJobUrl = () => {
@@ -93,6 +118,28 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Current AI Rating */}
+          {job.aiRating && job.aiFeedback && (
+            <Card className="border-primary/20 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold text-lg">{job.aiRating.toFixed(1)}</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      AI Analysis Rating • {job.aiFeedback.totalRatings} reviews • Updated {job.aiFeedback.lastRated}
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                    Community Verified
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Quick Actions */}
           <div className="flex items-center gap-3 flex-wrap">
             <Button 
@@ -114,7 +161,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
               onClick={() => setShowFeedback(!showFeedback)}
             >
               <Brain className="h-4 w-4" />
-              Rate AI Accuracy
+              {job.aiRating ? 'Update Rating' : 'Rate AI Accuracy'}
             </Button>
           </div>
 
@@ -130,8 +177,8 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                   Your feedback helps us train our AI to find better job matches. Rate the accuracy of this job analysis.
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">How accurate is this job analysis? *</Label>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -142,7 +189,7 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                         className="p-1 hover:scale-110 transition-transform"
                       >
                         <Star 
-                          className={`h-6 w-6 transition-colors ${
+                          className={`h-7 w-7 transition-colors ${
                             star <= rating 
                               ? 'fill-yellow-400 text-yellow-400' 
                               : 'text-gray-300 hover:text-yellow-300'
@@ -151,22 +198,41 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                       </button>
                     ))}
                   </div>
-                  <div className="text-xs text-muted-foreground">
-                    {rating === 1 && "Very poor match"}
-                    {rating === 2 && "Poor match"}
-                    {rating === 3 && "Okay match"}
-                    {rating === 4 && "Good match"}
-                    {rating === 5 && "Excellent match"}
+                  <div className="text-sm text-muted-foreground font-medium">
+                    {rating === 1 && "🔴 Very poor match - Major issues with analysis"}
+                    {rating === 2 && "🟠 Poor match - Several inaccuracies"}
+                    {rating === 3 && "🟡 Okay match - Some issues to address"}
+                    {rating === 4 && "🟢 Good match - Minor improvements needed"}
+                    {rating === 5 && "✨ Excellent match - Highly accurate analysis"}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">What aspects need improvement? (Select all that apply)</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {feedbackCategories.map((category) => (
+                      <Button
+                        key={category}
+                        type="button"
+                        variant={selectedCategories.includes(category) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => toggleCategory(category)}
+                        className="gap-1 text-xs"
+                      >
+                        {selectedCategories.includes(category) && <CheckCircle2 className="h-3 w-3" />}
+                        {category}
+                      </Button>
+                    ))}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="feedback-comment" className="text-sm font-medium">
-                    What could be improved? (Optional)
+                    Additional feedback (Optional)
                   </Label>
                   <Textarea
                     id="feedback-comment"
-                    placeholder="Tell us what's wrong or missing in this job analysis..."
+                    placeholder="Describe specific issues or suggestions for improvement..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     className="min-h-[80px] resize-none"
