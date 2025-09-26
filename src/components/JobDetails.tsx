@@ -1,11 +1,13 @@
-import React from 'react';
-import { ExternalLink, MapPin, Building2, DollarSign, Calendar, AlertTriangle, Eye, Briefcase, Users, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, MapPin, Building2, DollarSign, Calendar, Eye, Briefcase, Users, Globe, Star, MessageSquare, Brain } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
 interface Job {
@@ -33,10 +35,23 @@ interface JobDetailsProps {
 }
 
 const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpenProspect }) => {
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  
   if (!job) return null;
 
-  const handleReportIssue = () => {
-    toast.success("Issue reported successfully!");
+  const handleSubmitFeedback = () => {
+    if (rating === 0) {
+      toast.error("Please provide a rating");
+      return;
+    }
+    
+    // Here would be the API call to save feedback
+    toast.success("Thank you for your feedback! This helps improve our AI accuracy.");
+    setShowFeedback(false);
+    setRating(0);
+    setComment('');
   };
 
   const handleOpenJobUrl = () => {
@@ -93,11 +108,90 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
               <Eye className="h-4 w-4" />
               View Prospect
             </Button>
-            <Button variant="destructive" className="gap-2" onClick={handleReportIssue}>
-              <AlertTriangle className="h-4 w-4" />
-              Report an Issue
+            <Button 
+              variant="outline" 
+              className="gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary" 
+              onClick={() => setShowFeedback(!showFeedback)}
+            >
+              <Brain className="h-4 w-4" />
+              Rate AI Accuracy
             </Button>
           </div>
+
+          {/* AI Feedback Form */}
+          {showFeedback && (
+            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-primary">
+                  <Brain className="h-5 w-5" />
+                  Help Improve Our AI
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Your feedback helps us train our AI to find better job matches. Rate the accuracy of this job analysis.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">How accurate is this job analysis? *</Label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        className="p-1 hover:scale-110 transition-transform"
+                      >
+                        <Star 
+                          className={`h-6 w-6 transition-colors ${
+                            star <= rating 
+                              ? 'fill-yellow-400 text-yellow-400' 
+                              : 'text-gray-300 hover:text-yellow-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {rating === 1 && "Very poor match"}
+                    {rating === 2 && "Poor match"}
+                    {rating === 3 && "Okay match"}
+                    {rating === 4 && "Good match"}
+                    {rating === 5 && "Excellent match"}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="feedback-comment" className="text-sm font-medium">
+                    What could be improved? (Optional)
+                  </Label>
+                  <Textarea
+                    id="feedback-comment"
+                    placeholder="Tell us what's wrong or missing in this job analysis..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="min-h-[80px] resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <Button 
+                    onClick={handleSubmitFeedback}
+                    className="gap-2"
+                    disabled={rating === 0}
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Submit Feedback
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowFeedback(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <Separator />
 
