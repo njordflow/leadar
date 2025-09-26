@@ -345,57 +345,6 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Job Info */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Company Overview */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5" />
-                    Company Overview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Industry</p>
-                      <p className="text-sm">{companyInfo.industry}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Company Size</p>
-                      <p className="text-sm flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        {companyInfo.size}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Revenue</p>
-                      <p className="text-sm">{companyInfo.revenue}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Founded</p>
-                      <p className="text-sm">{companyInfo.founded}</p>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
-                    <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
-                  </div>
-
-                  <div className="pt-2 space-y-2">
-                    <Button variant="outline" size="sm" className="w-full gap-2">
-                      <Globe className="h-3 w-3" />
-                      Visit Website
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleViewProspect}>
-                      <Eye className="h-3 w-3" />
-                      Open Prospect
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -538,6 +487,57 @@ const JobDetails: React.FC<JobDetailsProps> = ({ job, open, onOpenChange, onOpen
                       </div>
                     </>
                   )}
+                </CardContent>
+              </Card>
+
+              {/* Company Overview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    Company Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Industry</p>
+                      <p className="text-sm">{companyInfo.industry}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Company Size</p>
+                      <p className="text-sm flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        {companyInfo.size}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Revenue</p>
+                      <p className="text-sm">{companyInfo.revenue}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Founded</p>
+                      <p className="text-sm">{companyInfo.founded}</p>
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
+                    <p className="text-sm text-muted-foreground">{companyInfo.description}</p>
+                  </div>
+
+                  <div className="pt-2 space-y-2">
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Globe className="h-3 w-3" />
+                      Visit Website
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleViewProspect}>
+                      <Eye className="h-3 w-3" />
+                      Open Prospect
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
